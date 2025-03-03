@@ -1,0 +1,5 @@
+sudo docker rm -f vrouter-build
+sudo docker image rm -f vrouter-build-new
+sudo rmmod vrouter
+sudo rm -rf /lib/modules/`uname -r`/updates/dkms/vrouter.ko
+

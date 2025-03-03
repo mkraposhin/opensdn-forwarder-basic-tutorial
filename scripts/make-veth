@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+if [ $# -lt 4 ]
+then
+    echo "Wrong number of arguments"
+    echo "Must be 3: veth vethc cont ip"
+fi
+
+veth_name=$1 #veth1
+vethc_name=$2 #veth1c
+cont_name=$3 #cont1
+vethc_ip=$4
+
+cont_pid=`docker container inspect $cont_name --format '{{ .State.Pid }}'`
+echo "veth=$veth_name,vethc=$vethc_name,cont=$cont_name,pid=$cont_pid"
+ip link add $veth_name type veth peer name $vethc_name
+ip link set $vethc_name netns $cont_pid
+ip link set dev $veth_name up
+docker exec -ti $cont_name ip link set dev $vethc_name up
+docker exec -ti $cont_name ip addr add $vethc_ip dev $vethc_name
+

@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+if [ $# -lt 1 ]
+then
+    echo "Please, specify the name of an interface"
+    exit
+fi
+
+dev_name=$1
+mac_parts=($(ip a | grep "$dev_name:" -A 1 | tail -n 1))
+mac=${mac_parts[1]}
+mac_octs=`echo "$mac" | sed -r 's/:/ /g'`
+echo "$mac_octs"
+echo "<list type=\"byte\" size=\"6\">"
+for oct in $mac_octs
+do
+    oct_dec=$((16#$oct))
+    echo "    <element>$oct_dec</element>"
+done
+echo "</list>"
