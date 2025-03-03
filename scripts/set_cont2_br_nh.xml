@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_nexthop_req>
+      <h_op type="i32" identifier="1">0</h_op>
+      <nhr_type type="byte" identifier="2">2</nhr_type>
+      <nhr_family type="byte" identifier="3">7</nhr_family>
+      <nhr_id type="i32" identifier="4">3</nhr_id>
+      <nhr_encap_oif_id type="list" identifier="6">
+        <list type="i32" size="3">
+          <element>62</element>
+          <element>-1</element>
+          <element>-1</element>
+        </list>
+      </nhr_encap_oif_id>
+      <nhr_encap_len type="i32" identifier="7">14</nhr_encap_len>
+      <nhr_vrf type="i32" identifier="9">0</nhr_vrf>
+      <nhr_flags type="u32" identifier="16">2097153</nhr_flags>
+      <nhr_encap type="list" identifier="17">
+        <list type="byte" size="14">
+          <element>202</element>
+          <element>32</element>
+          <element>118</element>
+          <element>193</element>
+          <element>44</element>
+          <element>137</element>
+          <element>0</element>
+          <element>0</element>
+          <element>94</element>
+          <element>0</element>
+          <element>1</element>
+          <element>0</element>
+          <element>8</element>
+          <element>0</element>
+        </list>
+      </nhr_encap>
+      <nhr_encap_valid type="list" identifier="30">
+        <list type="i32" size="3">
+          <element>1</element>
+          <element>0</element>
+          <element>0</element>
+        </list>
+      </nhr_encap_valid>
+    </vr_nexthop_req>
+  </message>
+</test>
+

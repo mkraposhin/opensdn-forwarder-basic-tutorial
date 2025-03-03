@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_route_req>
+      <h_op type="i32" identifier="1">0</h_op>
+      <rtr_vrf_id type="i32" identifier="2">0</rtr_vrf_id>
+      <rtr_family type="i32" identifier="3">2</rtr_family>
+      <rtr_prefix type="list" identifier="4">
+        <list type="byte" size="4">
+          <element>10</element>
+          <element>1</element>
+          <element>1</element>
+          <element>4</element>
+        </list>
+      </rtr_prefix>
+      <rtr_prefix_len type="i32" identifier="5">32</rtr_prefix_len>
+      <rtr_nh_id type="i32" identifier="9">4</rtr_nh_id>
+      <rtr_label_flags type="i32" identifier="7">1</rtr_label_flags>
+    </vr_route_req>
+  </message>
+</test>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_hugepage_config>
+      <h_op type="i32" identifier="1">0</h_op>
+      <vhp_mem type="list" identifier="2">
+      <list type="u64" size="0"></list>
+      </vhp_mem>
+
+      <vhp_psize type="list" identifier="3">
+      <list type="u32" size="0"></list>
+      </vhp_psize>
+
+      <vhp_mem_sz type="list" identifier="5">
+      <list type="u32" size="0"></list>
+      </vhp_mem_sz>
+
+      <vhp_file_paths type="list" identifier="6">
+      <list type="byte" size="0"></list>
+      </vhp_file_paths>
+
+      <vhp_file_path_sz type="list" identifier="7">
+      <list type="u32" size="0"></list>
+      </vhp_file_path_sz>
+    </vr_hugepage_config>
+  </message>
+</test>

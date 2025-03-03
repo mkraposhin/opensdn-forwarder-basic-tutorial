@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_interface_req>
+      <h_op type="i32" identifier="1">0</h_op>
+      <vifr_idx type="i32" identifier="6">56</vifr_idx>
+      <vifr_ip type="u32" identifier="39">50397450</vifr_ip>
+      <vifr_nh_id type="i32" identifier="48">1</vifr_nh_id>
+      <vifr_mac type="list" identifier="38">
+        <list type="byte" size="6">
+          <element>0</element>
+          <element>0</element>
+          <element>94</element>
+          <element>0</element>
+          <element>1</element>
+          <element>0</element>
+        </list>
+      </vifr_mac>
+      <vifr_pbb_mac type="list" identifier="12">
+        <list type="byte" size="6">
+          <element>118</element>
+          <element>132</element>
+          <element>212</element>
+          <element>225</element>
+          <element>4</element>
+          <element>117</element>
+        </list>
+      </vifr_pbb_mac>
+    </vr_interface_req>
+  </message>
+</test>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_vrf_req>
+      <h_op type="i32" identifier="1">0</h_op>
+      <vrf_rid type="i16" identifier="2">0</vrf_rid>
+      <vrf_idx type="i32" identifier="3">0</vrf_idx>
+      <vrf_flags type="i32" identifier="4">1</vrf_flags>
+    </vr_vrf_req>
+  </message>
+</test>
