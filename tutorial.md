@@ -35,10 +35,13 @@ A. Basic preparation steps
 7. sudo apt update
 
 ![Fig. A1: Starting the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-1.png)
+*Fig. A1: Starting the first container (cont1)*
 
 ![Fig. A2: The network configuration of the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-2.png)
+*Fig. A2: The network configuration of the first container (cont1)*
 
 ![Fig. A3: The list of images and containers running after the step A](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-3.png)
+*Fig. A3: The list of images and containers running after the step A*
 
 B. Installation of vRouter Forwarder and utilities
 -----------------------------------------------
