@@ -1,8 +1,8 @@
 Simple installation of OpenSDN vRouter Forwarder and usage
 ==========================================================
 
-The goal of this document is to demonstrate how OpenSDN processes
-packets from virtual endpoints (virtual machines or containers),
+The goal of this document is to demonstrate how OpenSDN forwards
+packets between virtual endpoints (virtual machines or containers),
 how to install it in the minimal configuration and how to make it
 working in very simple conditions.
 
@@ -34,11 +34,11 @@ A. Basic preparation steps
     - apt install netcat -y
 7. sudo apt update
 
-![Fig. A1: Starting the first container (cont1)]()
+![Fig. A1: Starting the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-1.png)
 
-![Fig. A2: The network configuration of the first container (cont1)]()
+![Fig. A2: The network configuration of the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-2.png)
 
-![Fig. A3: The list of images and containers running after the step A]()
+![Fig. A3: The list of images and containers running after the step A](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-3.png)
 
 B. Installation of vRouter Forwarder and utilities
 -----------------------------------------------
