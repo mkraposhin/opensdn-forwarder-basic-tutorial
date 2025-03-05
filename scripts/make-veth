@@ -3,7 +3,7 @@
 if [ $# -lt 4 ]
 then
     echo "Wrong number of arguments"
-    echo "Must be 3: veth vethc cont ip"
+    echo "Must be 4: veth vethc cont ip"
 fi
 
 veth_name=$1 #veth1
