@@ -15,24 +15,41 @@ Prerequisites
 1. VirtualBox (7.1 seems to work with Ubuntu 22.04 host OS).
 2. Ubuntu 22 OS running inside your VirtualBox or other environment.
 
+The sketch of the setup is shown on Fig. P1.
+
 A. Basic preparation steps
 --------------------------
 
 1. Install Ubuntu 22 OS (as a VM)
 2. Install Docker Engine using the instruction from [https://docs.docker.com/engine/install/ubuntu](https://docs.docker.com/engine/install/ubuntu)
-3. Update the software inside the VM
-4. sudo docker pull ubuntu:jammy
-5. sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash:
-    - apt update
-    - apt install iproute2 -y
-    - apt install iputils-ping
-    - apt install netcat -y
-6. sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash:
-    - apt update
-    - apt install iproute2 -y
-    - apt install iputils-ping
-    - apt install netcat -y
-7. sudo apt update
+3. Update the software inside the VM:
+
+        sudo apt update
+
+4. Pull default Ubuntu image from dockerhub.io 
+
+        sudo docker pull ubuntu:jammy
+
+5. Run container number 1 (it will have name **cont1**) and install
+necessary network utils inside it, see Fig. A1:
+
+        sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash:
+        apt update
+        apt install iproute2 -y
+        apt install iputils-ping
+        apt install netcat -y
+
+6. Run container number 2 (it will have name **cont2**) and install
+necessary network utils inside it, see Fig. A2:
+
+        sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash:
+        apt update
+        apt install iproute2 -y
+        apt install iputils-ping
+        apt install netcat -y
+
+After all these actions we should have 2 Ubuntu 22 containers running with
+names **cont1** and **cont2** inside our host operating system.
 
 ![Fig. A1: Starting the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-1.png)
 *Fig. A1: Starting the first container (cont1)*
@@ -46,16 +63,39 @@ A. Basic preparation steps
 B. Installation of vRouter Forwarder and utilities
 -----------------------------------------------
 
-1. sudo apt install gcc make
-2. sudo docker pull opensdn/tf-vrouter-kernel-build-init
-3. install the corresponding kernel sources and headers (5.15), https://ubuntuhandbook.org/index.php/2023/11/install-ga-kernel-5-15-ubuntu-22-04/
-4. remove other kernels, apt autoremove
-5. instal vbox additions
-6. sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules
-7. insmod vrouter ? ok dkms?. No, modprobe. But before, possibly dkms install vrouter is needed
-8. download contrail-tools image: sudo docker pull opensdn/contrail-tools
-9. sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/conrail-tools:latest
-10. sudo apt install dkms -y
+1. Install gcc compiler in order to compile and install vRouter Forwarder:
+
+        sudo apt install gcc make
+
+2. Install the corresponding kernel sources and headers (5.15),
+https://ubuntuhandbook.org/index.php/2023/11/install-ga-kernel-5-15-ubuntu-22-04/
+and reboot your host OS.
+3. Pull the image needed to build OpenSDN vRouter Forwarder from dockerhub:
+
+        sudo docker pull opensdn/tf-vrouter-kernel-build-init
+
+4. Remove other kernels from the host OS, for example using *apt autoremove*.
+5. If host OS is running inside the VirtualBox, install vbox additions.
+6. Reboot host OS.
+7. Compile OpenSDN vROuter Forwader module by running the image downloaded
+at step 3:
+
+        sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules
+
+8. ??? sudo apt install dkms -y
+8. Install the compiled vRouter Forwarder module into memory (No, modprobe. But before, possibly dkms install vrouter is needed????):
+
+        modprobe vrouter
+
+9. Download contrail-tools image:
+
+        sudo docker pull opensdn/contrail-tools
+
+9. Run contrail-tools in a separate terminal:
+
+        sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/conrail-tools:latest
+
+
 
 Constants can be found inside https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py
 
