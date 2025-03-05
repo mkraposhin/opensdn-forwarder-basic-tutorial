@@ -2,7 +2,7 @@
 
 veth_name=$1 #veth1
 veth_mac=00:00:5e:00:01:00
-cont_name=friendly_bell
+cont_name=contrail-tools
 
 
 docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
