@@ -17,16 +17,6 @@
           <element>0</element>
         </list>
       </vifr_mac>
-      <vifr_pbb_mac type="list" identifier="12">
-        <list type="byte" size="6">
-          <element>202</element>
-          <element>32</element>
-          <element>118</element>
-          <element>193</element>
-          <element>44</element>
-          <element>137</element>
-        </list>
-      </vifr_pbb_mac>
     </vr_interface_req>
   </message>
 </test>
