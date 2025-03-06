@@ -147,7 +147,7 @@ Firstly, we create a virtual pair for container **cont1**:
 
 Then we create a virtual pair for container **cont2**:
 
-    sudo bash tut-rep/scripts/make-veth veth2 veth2c cont1 10.1.1.12/24
+    sudo bash tut-rep/scripts/make-veth veth2 veth2c cont1 10.1.1.22/24
 
 Interfaces **veth1** and **veth2** reside in the host OS, while interfaces
 **veth1c** and **veth2c** reside in the containers **cont1** and **cont2**
@@ -260,7 +260,7 @@ Then we invoke our requests:
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif2_ip.xml
 
 
-E. Fi nal verification of connectivity between containers
+E. Final verification of connectivity between containers
 --------------------------------------------------------
 
 OpenSDN data plane basic defintions
