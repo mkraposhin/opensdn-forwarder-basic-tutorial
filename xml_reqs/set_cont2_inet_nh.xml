@@ -6,10 +6,10 @@
       <h_op type="i32" identifier="1">0</h_op>
       <nhr_type type="byte" identifier="2">2</nhr_type>
       <nhr_family type="byte" identifier="3">2</nhr_family>
-      <nhr_id type="i32" identifier="4">12</nhr_id>
+      <nhr_id type="i32" identifier="4">22</nhr_id>
       <nhr_encap_oif_id type="list" identifier="6">
         <list type="i32" size="3">
-          <element>62</element>
+          <element>0</element>
           <element>-1</element>
           <element>-1</element>
         </list>
@@ -20,13 +20,12 @@
       <nhr_flags type="u32" identifier="16">1</nhr_flags>
       <nhr_encap type="list" identifier="17">
         <list type="byte" size="14">
-          <element>202</element>
-          <element>32</element>
-          <element>118</element>
-          <element>193</element>
-          <element>44</element>
-          <element>137</element>
-
+          <element>1</element>
+          <element>2</element>
+          <element>3</element>
+          <element>4</element>
+          <element>5</element>
+          <element>6</element>
           <element>0</element>
           <element>0</element>
           <element>94</element>

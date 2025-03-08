@@ -11,11 +11,11 @@
           <element>10</element>
           <element>1</element>
           <element>1</element>
-          <element>3</element>
+          <element>11</element>
         </list>
       </rtr_prefix>
       <rtr_prefix_len type="i32" identifier="5">32</rtr_prefix_len>
-      <rtr_nh_id type="i32" identifier="9">2</rtr_nh_id>
+      <rtr_nh_id type="i32" identifier="9">11</rtr_nh_id>
       <rtr_label_flags type="i32" identifier="7">1</rtr_label_flags>
     </vr_route_req>
   </message>

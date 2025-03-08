@@ -12,8 +12,16 @@ employed in OpenSDN to transport packets in virtual networks.
 Prerequisites
 -------------
 
-1. VirtualBox (7.1 seems to work with Ubuntu 22.04 host OS).
-2. Ubuntu 22 OS running inside your VirtualBox or other environment.
+1. Ubuntu 22 OS running inside your VirtualBox or other environment.
+2. Root access to this OS.
+
+Introduction
+------------
+
+This tutorial demonstrates basics of communication with OpenSDN vRouter
+Forwarder and allows reader to understand deeper what's
+going behind the scene when the configuration is modified and OpenSDN
+vRouter Agent sends requests to the Forwarder.
 
 The sketch of the setup is shown on Fig. P1.
 
@@ -169,7 +177,7 @@ prepared for this tutorial to run this utility:
     docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
 
 It is assumed that the container with contrail-tools package is up and running
-as **contrail-tools**. Next we type:
+under the name **contrail-tools**. Next we type:
 
     sudo bash tut-rep/scripts/make-vif veth1
     sudo bash tut-rep/scripts/make-vif veth2
@@ -178,7 +186,8 @@ D. Configuration of routing information
 ---------------------------------------
 
 Since we will need data from the tutorial's github repository, it is
-recomended to clone it inside **contrail-tools** repository:
+recomended to clone it inside **contrail-tools**, **cont1** and
+**cont2** repositories in the root folders:
 
     git clone https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial.git tut-rep
 
@@ -204,6 +213,10 @@ We invoke the request from **contrail-tools** container using **vrcli**
 command as follows:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_hugepages_conf.xml
+
+As a response we must see (!!! to check !!!):
+
+    Running Sandesh request ...
 
 We can check that the operation was succesfull by invoking:
 
@@ -245,13 +258,22 @@ from the host OS;
 - field <vifr_nh_id></vifr_nh_id> must contain identifier of a nexthop
 attached to this interface.
 
-How to get vifr_id?
+We take **vifr_idx** from from the output of **ip a** command: it is a number
+before colon preceding the name of the corresponding interface (**veth1**
+or **veth2**), see Fig. D-1 (??)
 
-How to set set vifr_ip?
+The value of IPv4 address is submitted into **vr_interface_req** as an
+4-byte integer number, therefore, we must convert IP addresses from the
+network configuration introduced earlier:
+- 10.1.1.11 converts into 11\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
+184615179;
+- 10.1.1.22 converts into 22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
+369164566.
 
-For the nexthop identifier (or vifr_nh_id field) we must agree here,
-because we do not have any nexthops in vRouter Forwarder now. Let's
-take nexthop number 1 for virtual interface 1 (**veth1**) and nexthop 2 for
+For the nexthop identifier (or **vifr_nh_id** field) we must agree here,
+because we do not have any nexthops in vRouter Forwarder now and these
+numbers are arbitrary (i.e. they don't need to follow any rules). Let's
+choose nexthop number 1 for virtual interface 1 (**veth1**) and nexthop 2 for
 virtual interface 2 (**veth2**).
 
 Then we invoke our requests:
@@ -259,9 +281,215 @@ Then we invoke our requests:
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif1_ip.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif2_ip.xml
 
+If requests are accepted by OpenSDN vRouter Forwarder, we must see:
 
-E. Final verification of connectivity between containers
---------------------------------------------------------
+    Sandesh request ... (!!!???!!!)
+
+Then we can **vif** utility to verify our interface configuration in OpenSDN
+vRouter Forwarder (see Fig D-2 for example).
+
+Nexthops 1 and 2 are referenced by out interfaces, but they do not present in
+our configuration and this can be checked with the utility **nh**:
+
+    nh --list
+
+To add a nexthop into OpenSDN vRouter Forwarder table one uses **vr_nexthop_req**
+requests. Examples of these requests for nexthops associated with interfaces
+**veth1** and **veth2** are stored in files
+(set_cont1_br_nh_req.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_nh_req.xml]
+and
+(set_cont2_br_nh_req.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh_req.xml]
+respectively.
+
+To adjust these templates to the local configuration next fields must be corrected:
+- <nhr_encap_oif_id></nhr_encap_oif_id> storing labels of interfaces associated with
+the given nexthop;
+- <nhr_encap></nhr_encap> storing local (the container or the VM) MAC address of
+the interface with we associate the nexthop.
+
+For the interface label (ID) we replace number 0:
+
+    <element>0</element>
+with the actual ID of **veth1** or **veth2** interface from the output of
+**vif** command (**contrail-tools** container):
+
+    vif --list
+
+The array storing **nhr_encap** field contains six elements representing bytes
+of an associated virtual interface MAC address (**veth1c** or **veth2c**
+in our case). These elements are marked with numbers 1 to 6 in the templates:
+
+          <element>1</element>
+          <element>2</element>
+          <element>3</element>
+          <element>4</element>
+          <element>5</element>
+          <element>6</element>
+
+There is a script
+[devmac2list](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/devmac2list)
+which simplifies retrieval of these elements from an interface (in order to
+use it, the repository must be cloned into **cont1** and **cont2**).
+If the repository was cloned into folder **/tut-rep** of **cont1** and
+**cont2** containers, then we can run next commands from the host OS:
+
+    sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth1c
+    sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth2c
+
+The output of these commands must be similar to Fig. D-3. Note, that here we
+use **veth1c** and **veth2c** instead of **veth1** and **veth2** because
+we need MAC addresses of the interfaces from containers, not from the host OS.
+
+Afterwards values can be copied into requests stored in
+**set_cont1_br_nh_req.xml** and **set_cont2_br_nh_req.xml** files in 
+**contrail-tools** container. Then we run these requests in order to add
+nexthops into vRouter Forwarder (**contrail-tools** container):
+
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_nh_req.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_nh_req.xml
+
+Now we can check that nexthops were added by typing in **contrail-tools**
+container:
+
+    nh --list
+
+The output of the command above must be similar to the Fig. D-4. From the 
+output we can verify that the correct interfaces were associated with our
+nexthops and we can also compare MAC strings in nexthops 1 and 2 with
+**veth1c** and **veth2c** MAC addresses (can be obtained with **ip**
+command inside the corresponding containers).
+
+While our interfaces are now associated with nexthops, vRouter Forwarder
+still doesn't have enough information to switch packets between **veth1c**
+and **veth2c** because there is no association between a packet header
+and an interface accepting the packet. This gap is filled with
+forwarding tables. Firstly, we need a bridge or L2 forwarding table
+records (or route records) to enable transport of Ethernet frames
+through vRouter Forwarder.  A route record is basically a structure
+containing a prefix address (MAC, IPv4 or IPv6) and the link to the
+a nexthop defining what to do next the packet whose outer header matches
+the route prefix address. 
+
+Before adding a route record we have to associate our nexthops
+with MPLS labels since OpenSDN is MPLS-based SDN and it requires
+this type of addressing for bridge communications. MPLS labels
+are introducted using **vr_mpls_req** requests. The example request
+is stored in
+[set_mpls.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mpls.xml)
+file. As it is seen from the content of the file, the request is quite simple:
+it just associates a nexthop number with an MPLS label number.
+
+In order to create MPLS labels for our nexthops 1 and 2 it's necessary
+to run the request **set_mpls.xml** file from **contrail-tools**
+container:
+
+vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls.xml
+
+The results of the command can be verified with **mpls** utility in
+**contrail-tools** container (see Fig. D-5 for example):
+
+    mpls --dump
+
+L2 route records are added via **vr_route_req** requests. The request
+must contain: a VRF table ID (0 in our example), a family type (7 which is
+basically the value of AF_BRIDGE constant), the label of a nexthop (1 or 2 in
+this tutorial) and a prefix which is determined by a MAC address of
+a container or a VM interface (**veth1c** or **veth2c** in this 
+tutorial). Examples of this request adding L2 routes to interfaces
+**veth1c** and **veth2c** are stored in 
+[set_cont1_br_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_rt.xml)
+and
+[set_cont2_br_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_rt.xml)
+files.
+
+Values of **veth1c** and **veth2c** interfaces MAC address can be retrieved
+using script **devmac2list** by running next commands from the host OS:
+
+    sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth1c
+    sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth2c
+
+The output of each command must be substituted into **rtr_mac** field of
+**set_cont1_br_rt.xml** and **set_cont2_br_rt.xml** inside **contrail-tools**
+containers. Next we run **vrcli** command inside **contrail-tools**:
+
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_rt.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_rt.xml
+
+The added routes can be verified using **rt** command inside **contrail-tools**
+container (here 0 corresponds to the label of the VRF table):
+
+    rt --dump 0 --family bridge
+
+The output of the command above must be similar to Fig. D-6. Although the
+current configuration of vRouter Forwarder allows to trasmit L2 fragments
+betweng our containers **cont1** and **cont2**, it is of little use because
+usually we operate with L3 packets and therefore we need L3 nexthops and
+L3 routes in order to use ping. However, even this very simple configuration
+demonstrates how data in general is organized inside vRouter Forwarder.
+Namely, we have several interconnected tables responsible for transmission
+of packets between virtual machines or containers (see Fig. D-7):
+- a VRFs table defining list of VRF tables with isolated routing information;
+- an interface table specifying the association between an interface
+(attached to a VM or a container) with a VRF table and with a nexthop;
+- a nexthop table defining a list of nexthops (destinations);
+- bridge and inet routes tables associated with each VRF table
+defining which nexthops must be applied to packets depending on their
+outer headers.
+
+At the next step L3 routes are to be added to enable transmission of L3
+packets through OpenSDN vRouter Forwarder. As with L2 routes, the corresponding
+nexthops must be added beforehand. Examples of requests to add L3 nexthops
+are stored in
+[set_cont1_inet_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_inet_nh.xml)
+and
+[set_cont2_inet_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_inet_nh.xml)
+files. 
+Labels 11 and 22 were selected for L3 nexthops associated with interfaces
+**veth1c** and **veth2c** (see Fig. D-7). The templates also require
+modification of the interface MAC address in **nhr_encap** field (the procedure
+is similar to the used previously for L2 nexthops) and the interface label
+**nhr_encap_oif_id** configuration (same as for L2 nexthops). Finally,
+the nexthops are added in **contrail-tools** container using the commands:
+
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_inet_nh.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_inet_nh.xml
+
+Upon the successful completion, the list of nexthops must get updated and this
+can be verified using **nh** command inside **contrail-tools** container:
+
+    nh --list
+
+The reference output of the command is presented in Fig. D-8.
+Finally, L3 routes are added using the requests similar to what have been
+used for L2 routes. The examples of requests are stored in
+[set_cont1_inet_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_inet_rt.xml)
+and
+[set_cont2_inet_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_inet_rt.xml)
+files.
+These route requests create new routes in IPv4 inet route table of VRF table 0
+for prefixes 10.1.1.11/32 and 10.1.1.22/32 according to the initial network
+configuration (see Fig. I-1). The route with prefix 10.1.1.11/32 points to
+nexthop 11 and the route with prefix 10.1.1.22/32 points to
+nexthop 22: this means that whenever a packet with the destination IP in the
+outer header equal to 10.1.1.11/32 or 10.1.1.22/32 enters vRouter Forwarder
+through interfaces associated with VRF table 0, it will be redirected
+to the corresponding nexthops (11 and 22 respectively).
+
+The routes are added in **contrail-tools** container using the commands:
+
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_inet_rt.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_inet_rt.xml
+
+The resulting configuration can be verified using **rt** command in
+**contrail-tools** container:
+
+    rt --get 10.1.1.11/32 --vrf 0 --family inet
+    rt --get 10.1.1.22/32 --vrf 0 --family inet
+
+The output of the commands should be similar to the presented on Fig. D-9.
+
+E. Verification of connectivity between containers
+--------------------------------------------------
 
 OpenSDN data plane basic defintions
 -----------------------------------

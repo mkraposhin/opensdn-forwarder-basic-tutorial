@@ -10,12 +10,12 @@
       <rtr_nh_id type="i32" identifier="9">1</rtr_nh_id>
       <rtr_mac type="list" identifier="12">
         <list type="byte" size="6">
-          <element>118</element>
-          <element>132</element>
-          <element>212</element>
-          <element>225</element>
+          <element>1</element>
+          <element>2</element>
+          <element>3</element>
           <element>4</element>
-          <element>117</element>
+          <element>5</element>
+          <element>6</element>
         </list>
       </rtr_mac>
     </vr_route_req>

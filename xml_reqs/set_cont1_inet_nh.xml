@@ -9,23 +9,23 @@
       <nhr_id type="i32" identifier="4">11</nhr_id>
       <nhr_encap_oif_id type="list" identifier="6">
         <list type="i32" size="3">
-          <element>56</element>
+          <element>0</element>
           <element>-1</element>
           <element>-1</element>
         </list>
       </nhr_encap_oif_id>
-      <nhr_encap_family type="i32" identifier="8">2054</nhr_encap_family>
+      <nhr_encap_family type="i32" identifier="8">0</nhr_encap_family>
       <nhr_encap_len type="i32" identifier="7">14</nhr_encap_len>
       <nhr_vrf type="i32" identifier="9">0</nhr_vrf>
       <nhr_flags type="u32" identifier="16">1</nhr_flags>
       <nhr_encap type="list" identifier="17">
         <list type="byte" size="14">
-          <element>118</element>
-          <element>132</element>
-          <element>212</element>
-          <element>225</element>
+          <element>1</element>
+          <element>2</element>
+          <element>3</element>
           <element>4</element>
-          <element>117</element>
+          <element>5</element>
+          <element>6</element>
           <element>0</element>
           <element>0</element>
           <element>94</element>
