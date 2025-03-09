@@ -1,5 +1,5 @@
-Simple installation of OpenSDN vRouter Forwarder and it's usage
-===============================================================
+Minimal installation of OpenSDN vRouter Forwarder and it's usage
+================================================================
 
 The goal of this document is to demonstrate how OpenSDN forwards
 packets between virtual endpoints (virtual machines or containers),
@@ -32,12 +32,19 @@ facilitate rational introduction of changes in an OpenSDN virtual network
 configuration and analysis of arising faults and their reasons.
 
 The network configuration to consider was intentionally selected very simple.
-The sketch of the network setup is shown on Fig. I1: we have 2 containers,
+The sketch of the network setup is shown on Fig. I1: we have 2 endpoints,
 each having an IP address (10.1.1.11/24 and 10.1.1.22/24) and communicating
 with each other via a switch which is imitated using OpenSDN vRouter Forwarder.
 
+From the operating system point of view we will have 2 containers connected
+to the host OS and to the vRouter Forwarder via veth pairs (
+**veth1**/**veth1c** and **veth2**/**veth2c**), Fig. I2.
+
 ![Fig. I1: The considered virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
 *Fig. I1: The considered virtual network configuration design*
+
+![Fig. I2: The virtual network configuration implementation](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-2.png)
+*Fig. I2: The virtual network configuration implementation*
 
 A. Basic preparation steps
 --------------------------
