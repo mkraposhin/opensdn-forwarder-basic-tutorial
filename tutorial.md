@@ -149,7 +149,7 @@ tabs) in the host OS:
         sudo docker exec -ti cont2 bash
 
 ![Fig. B1: An example of the vRouter Forwader build process output](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-B-1.png)
-*FFig. B1: An example of the vRouter Forwader build process output*
+*Fig. B1: An example of the vRouter Forwader build process output*
 
 C. Configuration of containers interfaces
 -----------------------------------------
