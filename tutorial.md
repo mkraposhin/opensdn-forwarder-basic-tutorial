@@ -36,8 +36,8 @@ The sketch of the network setup is shown on Fig. I1: we have 2 containers,
 each having an IP address (10.1.1.11/24 and 10.1.1.22/24) and communicating
 with each other via a switch which is imitated using OpenSDN vRouter Forwarder.
 
-![Fig. I1: The test virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
-*Fig. I1: The test virtual network configuration design*
+![Fig. I1: The considered virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
+*Fig. I1: The considered virtual network configuration design*
 
 A. Basic preparation steps
 --------------------------
@@ -58,26 +58,26 @@ necessary network utils inside it, see Fig. A1:
 
         sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash:
         apt update
-        apt install iproute2 -y
-        apt install iputils-ping
-        apt install netcat -y
+        apt install iproute2 iputils-ping netcat git -y
 
 6. Run container number 2 (it will have name **cont2**) and install
 necessary network utils inside it, see Fig. A2:
 
         sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash:
         apt update
-        apt install iproute2 -y
-        apt install iputils-ping
-        apt install netcat -y
+        apt install iproute2 iputils-ping netcat git -y
 
-After all these actions we should have 2 Ubuntu 22 containers running with
-names **cont1** and **cont2** inside our host operating system.
+After all these actions we must have 2 Ubuntu 22 containers running with
+names **cont1** and **cont2** inside the host operating system.
 
-Finaly, its necessary to download the tutorial folders from GitHub into
-the filesystem of the host OS running our containers **cont1** and **cont2**:
+Finally, its necessary to download the tutorial folders from GitHub repository
+into the filesystems of the host OS and containers **cont1** and **cont2**:
 
     git clone https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial.git tut-rep
+
+It is assumed that the repository is downloaded inside the user home directory of
+the host OS and inside the root directory (/) of containers **cont1**
+and **cont2**.
 
 ![Fig. A1: Starting the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-1.png)
 *Fig. A1: Starting the first container (cont1)*
@@ -89,43 +89,67 @@ the filesystem of the host OS running our containers **cont1** and **cont2**:
 *Fig. A3: The list of images and containers running after the step A*
 
 B. Installation of vRouter Forwarder and utilities
------------------------------------------------
+--------------------------------------------------
 
-1. Install gcc compiler in order to compile and install vRouter Forwarder:
+Here are technical steps to build and run vRouter Forwarder manually are
+covered in details since usually this process is completed automatically
+using some installation scripts, which are not used because thhis installation
+is claimed to be minimal.
 
-        sudo apt install gcc make
+1. Install gcc compiler and other tools in order to compile and install vRouter
+Forwarder in the host OS:
+
+        sudo apt install gcc make dkms -y
 
 2. Install the corresponding kernel sources and headers (5.15),
 https://ubuntuhandbook.org/index.php/2023/11/install-ga-kernel-5-15-ubuntu-22-04/
 and reboot your host OS.
-3. Pull the image needed to build OpenSDN vRouter Forwarder from dockerhub:
+3. Pull the image needed to build in the host OS OpenSDN vRouter Forwarder
+from dockerhub:
 
         sudo docker pull opensdn/tf-vrouter-kernel-build-init
 
 4. Remove other kernels from the host OS, for example using *apt autoremove*.
-5. If host OS is running inside the VirtualBox, install vbox additions.
-6. Reboot host OS.
-7. Compile OpenSDN vROuter Forwader module by running the image downloaded
-at step 3:
+5. If the host OS is running inside the VirtualBox, install vbox additions.
+6. Reboot the host OS to boot into the installed 5.15 kernel.
+7. Compile the OpenSDN vRouter Forwarder module by running the image downloaded
+at step 3 in the host OS:
 
-        sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules
+        sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules opensdn/tf-vrouter-kernel-build-init:latest
 
-8. ??? sudo apt install dkms -y
-8. Install the compiled vRouter Forwarder module into memory (No, modprobe. But before, possibly dkms install vrouter is needed????):
+8. The build and installation process should output information about the progress on the screen. At the file vrouter.ko must appear inside /lib/modules/`uname -r`/updates/dkms of the host OS filesystem (see Fig. B1). Install the compiled vRouter Forwarder module into memory using modprobe
+in the host OS:
 
-        modprobe vrouter
+        sudo modprobe vrouter
 
-9. Download contrail-tools image:
+9. Check that **vrouter** module has been installed in the host OS:
+
+        lsmod | grep vrouter
+
+10. Download contrail-tools image in the host OS:
 
         sudo docker pull opensdn/contrail-tools
 
-9. Run contrail-tools in a separate terminal:
+11. Run contrail-tools in a separate terminal of the host OS:
 
         sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/conrail-tools:latest
 
+12. Copy the tutorial repository inside the root (/) folder of **contrail-tools** container
+from the host OS
 
+        tar cfz tut-rep.tgz tut-rep && sudo docker cp ./tut-rep.tgz contrail-tools:/tut-rep.tgz && sudo docker exec -ti contrail-tools tar xfz tut-rep.tgz
 
-Constants can be found inside https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py
+13. Run containers **cont1** and **cont2** (in separate terminal windows or
+tabs) in the host OS:
+
+        sudo docker start cont1
+        sudo docker start cont2
+
+        sudo docker exec -ti cont1 bash
+        sudo docker exec -ti cont2 bash
+
+![Fig. B1: An example of the vRouter Forwader build process output](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-B-1.png)
+*FFig. B1: An example of the vRouter Forwader build process output*
 
 C. Configuration of containers interfaces
 -----------------------------------------
@@ -164,7 +188,7 @@ container and assigns it the specified address:
     docker exec -ti $cont_name ip link set dev $vethc_name up
     docker exec -ti $cont_name ip addr add $vethc_ip dev $vethc_name
 
-Firstly, we create a virtual pair for container **cont1**:
+Firstly, we create a virtual pair for container **cont1** on the host OS:
 
     sudo bash tut-rep/scripts/make-veth veth1 veth1c cont1 10.1.1.11/24
 
@@ -172,16 +196,20 @@ Then we create a virtual pair for container **cont2**:
 
     sudo bash tut-rep/scripts/make-veth veth2 veth2c cont1 10.1.1.22/24
 
+After these steps we must see 2 new interfaces in the host OS (Fig. C1)
+and one new interface in **cont1** and **cont** (Fig. C2 and Fig. C3
+respectively).
 Interfaces **veth1** and **veth2** reside in the host OS, while interfaces
 **veth1c** and **veth2c** reside in the containers **cont1** and **cont2**
 respectively.
 
 Now we must tell OpenSDN vRouter Forwarder to catch packets from interfaces
 **veth1** and **veth2** and switch them. This is achieved using **vif**
-utility from OpenSDN contrail-tools package. The utils can be used to
+utility from OpenSDN contrail-tools package. The utility can be used to
 list interfaces connected to OpenSDN vRouter Forwarder or it can be
 use to connect host OS virtual or physical network interfaces. There
-is a special script [make-vif](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/make-vif)
+is a special script 
+[make-vif](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/make-vif)
 prepared for this tutorial to run this utility:
 
     veth_name=$1 #veth1
@@ -192,19 +220,35 @@ prepared for this tutorial to run this utility:
     docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
 
 It is assumed that the container with contrail-tools package is up and running
-under the name **contrail-tools**. Next we type:
+under the name **contrail-tools**. Then one types in the host OS:
 
     sudo bash tut-rep/scripts/make-vif veth1
     sudo bash tut-rep/scripts/make-vif veth2
 
+The result of this operation can be verified using **vif** utility inside
+**contrail-tools** container:
+
+    vif --list
+
+The utility returns the list of the atthached to vRouter Forwarder interfaces
+among which we should see records for **veth1** and **veth2**, Fig. C4.
+
+![Fig. C1: An example of "ip a" output in the host OS](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-1.png)
+*Fig. C1: An example of "ip a" output in the host OS*
+
+![Fig. C2: An example of "ip a" output in cont1](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-2.png)
+*Fig. C2: An example of "ip a" output in **cont1***
+
+![Fig. C3: An example of "ip a" output in cont2](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-3.png)
+*Fig. C3: An example of "ip a" output in **cont2***
+
+![Fig. C4: An example of "vif --list" output in contrail-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-4.png)
+*Fig. C4: An example of "vif --list" output in **contrail-tools***
+
 D. Configuration of routing information
 ---------------------------------------
 
-Since we will need data from the tutorial's github repository, it is
-recomended to clone it inside **contrail-tools**, **cont1** and
-**cont2** repositories in the root folders:
-
-    git clone https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial.git tut-rep
+Constants can be found inside https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py
 
 OpenSDN vRouter Forwarder uses linux the Netlink protocol to receive
 requests and send responses. Configuration requests can be written
