@@ -1,5 +1,5 @@
-Simple installation of OpenSDN vRouter Forwarder and usage
-==========================================================
+Simple installation of OpenSDN vRouter Forwarder and it's usage
+===============================================================
 
 The goal of this document is to demonstrate how OpenSDN forwards
 packets between virtual endpoints (virtual machines or containers),
@@ -18,22 +18,32 @@ Prerequisites
 Introduction
 ------------
 
-This tutorial demonstrates basics of communication with OpenSDN vRouter
-Forwarder and allows reader to understand deeper what's
-going behind the scene when the configuration is modified and OpenSDN
-vRouter Agent sends requests to the Forwarder.
+The material demonstrates basics of network communication using OpenSDN
+vRouter Forwarder and allows a reader to understand deeper basic concepts
+which are used in OpenSDN dataplane and how this component is programmed
+by higher level components (by the vRouter Agent, the Controller and,
+eventually, the Config).
 
-??? This tutorial not only shows how to implement a simple network
-configuration using OpenSDN dataplane component vRouter Forwarder, but
-also demonstrates it's main ????
+Essentially, the steps covered in this tutorial reproduce requests which are
+sent by vRouter Agent to vRouter Forwarder when a virtual network configuration
+is modified using Config API or OpenSDN UI mechanisms. The understanding of
+how vRouter Forwarder is programmed by higher level components should
+facilitate rational introduction of changes in an OpenSDN virtual network
+configuration and analysis of arising faults and their reasons.
 
-The sketch of the setup is shown on Fig. P1.
+The network configuration to consider was intentionally selected very simple.
+The sketch of the network setup is shown on Fig. I1: we have 2 containers,
+each having an IP address (10.1.1.11/24 and 10.1.1.22/24) and communicating
+with each other via a switch which is imitated using OpenSDN vRouter Forwarder.
+
+![Fig. I1: The test virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
 
 A. Basic preparation steps
 --------------------------
 
 1. Install Ubuntu 22 OS (as a VM)
-2. Install Docker Engine using the instruction from [https://docs.docker.com/engine/install/ubuntu](https://docs.docker.com/engine/install/ubuntu)
+2. Install Docker Engine using the instruction from 
+[https://docs.docker.com/engine/install/ubuntu](https://docs.docker.com/engine/install/ubuntu)
 3. Update the software inside the VM:
 
         sudo apt update
