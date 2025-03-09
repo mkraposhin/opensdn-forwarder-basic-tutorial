@@ -7,7 +7,7 @@
       <rtr_vrf_id type="i32" identifier="2">0</rtr_vrf_id>
       <rtr_family type="i32" identifier="3">7</rtr_family>
       <rtr_rid type="i16" identifier="6">0</rtr_rid>
-      <rtr_nh_id type="i32" identifier="9">5</rtr_nh_id>
+      <rtr_nh_id type="i32" identifier="9">100</rtr_nh_id>
       <rtr_mac type="list" identifier="12">
         <list type="byte" size="6">
           <element>255</element>

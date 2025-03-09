@@ -491,8 +491,81 @@ The output of the commands should be similar to the presented on Fig. D-9.
 E. Verification of connectivity between containers
 --------------------------------------------------
 
-OpenSDN data plane basic defintions
------------------------------------
+It might look at this point that the current vRouter Forwarder configuration
+is sufficient to transmit packages between containers **cont1** and **cont2**:
+there are two interfaces connected to the containers and to vRouter Forwarder,
+and there are L3 and L2 routes linked to these interfaces allowing transmission
+of packets between them. Obviously, the configuration can be verified using
+**ping** and **tcpdump** utilities:
+1. start **tcpdump** in the host OS system watching interface 1 **veth1**:
+        sudo tcpdump -i veth1 -vv -n
+2. run **ping**  to the second container (**cont2**) inside the first
+container **cont1**:
+        ping -n 10.1.1.22
+
+It is seen from the output (see Fig. E-1 for example) that while there are
+ICMP requests from 10.1.1.11 to 10.1.1.22, there are no responds from the
+latter. And in addition to ICMP packets there are many ARP requests
+about resolution of MAC address for IP 10.1.1.11. Hence, it can be concluded
+that possibly the current vRouter Forwarder configuration doesn't transmit
+ARP packets from **cont1** to **cont2** or in the reverse direction. The
+reasons of this behavour can be clarified using **dropstats** utility
+from **contrail-tools** container:
+
+    dropstats --log 0
+
+This utility prints to the console recent error messages produced by vRouter
+Forwarder during transmission of packets. Since error messages are stored
+inside vRouter Forwarder separately for each CPU, the option **--log 0**
+tells **dropstats** to collect data from all buffers into one output stream.
+It is seen from the example output shown on Fig. E-2 that vRouter Forwarder
+can't find an L2 router for broadcast MAC address FF:FF:FF:FF:FF:FF. Thus,
+we need a route with a corresponding nexthop that redirects ARP packets
+destined to FF:FF:FF:FF:FF:FF to all virtual interfaces except the
+ingress one. This type of nexthops are called Composite in OpenSDN, while
+such routes are called multicast.
+
+The examples of requests are stored in
+[set_mcast_br_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mcast_br_nh.xml)
+and in
+[set_mcast_br_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mcast_br_rt.xml).
+
+The main difference with previous **vr_nexthop_req** can be observed in
+[set_mcast_br_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mcast_br_nh.xml) because of two additional fields:
+- <nhr_nh_list></nhr_nh_list>, a list of nexthops (sub-nexthops) associated with
+virtual interfaces;
+- <nhr_label_list></nhr_label_list>, a list of MPLS labels corresponding to
+the nexthops from <nhr_nh_list></nhr_nh_list>.
+
+Having applied the commands to run these requests from **contrail-tools**
+container:
+
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mcast_br_nh.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mcast_br_rt.xml
+
+we can now verify the modified list of nexthops (see Fig. E-3) and the
+modified list of L2 routes (see Fig. E-4) have accommodated the new records.
+
+Now **ping** command from 10.1.1.11 to 10.1.1.22 and in the reverse direction
+must work properly (see Fig E-5).
+
+Finally, it is recommended to check UDP connection using **nc** utility:
+
+1) start an UDP server in **cont1**:
+
+        nc -4 -u -l 10.1.1.11 50000
+
+2) start an UDP client in **cont2**:
+
+        nc -4 -u 10.1.1.11 50000
+
+3) try typing messages in one **nc** window (**nc** prompt) to see
+them appearing in another **nc** window.
+
+Conclusions
+-----------
+
+### OpenSDN data plane basic defintions
 
 Perhaps, this is the most important part of the document since it introduces
 definitions which are mandatory for successfull administration, usage and
@@ -546,6 +619,15 @@ Composite nexthops can have different sub-types:
 - mixed type when components of the composite nexthop have different (encap or
 tunnel) types.
 
+### OpenSDN dataplane utilities
+
+- vrcli
+- vif
+- vrfdump
+- nh
+- mpls
+- rt
+- dropstats
 
 Bibliography
 ------------

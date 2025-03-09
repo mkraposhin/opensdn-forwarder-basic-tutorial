@@ -6,19 +6,19 @@
       <h_op type="i32" identifier="1">0</h_op>
       <nhr_type type="byte" identifier="2">6</nhr_type>
       <nhr_family type="byte" identifier="3">7</nhr_family>
-      <nhr_id type="i32" identifier="4">5</nhr_id>  
+      <nhr_id type="i32" identifier="4">100</nhr_id>  
       <nhr_vrf type="i32" identifier="9">0</nhr_vrf>
       <nhr_flags type="u32" identifier="16">2105353</nhr_flags>
       <nhr_nh_list type="list" identifier="18">
         <list type="i32" size="2">
           <element>1</element>
-          <element>3</element>
+          <element>2</element>
         </list>
       </nhr_nh_list>
       <nhr_label_list type="list" identifier="19">
         <list type="i32" size="2">
           <element>1</element>
-          <element>3</element>
+          <element>2</element>
         </list>
       </nhr_label_list>
     </vr_nexthop_req>
