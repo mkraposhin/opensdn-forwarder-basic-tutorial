@@ -37,6 +37,7 @@ each having an IP address (10.1.1.11/24 and 10.1.1.22/24) and communicating
 with each other via a switch which is imitated using OpenSDN vRouter Forwarder.
 
 ![Fig. I1: The test virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
+*Fig. I1: The test virtual network configuration design*
 
 A. Basic preparation steps
 --------------------------
