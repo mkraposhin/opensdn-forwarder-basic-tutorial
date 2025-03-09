@@ -23,6 +23,10 @@ Forwarder and allows reader to understand deeper what's
 going behind the scene when the configuration is modified and OpenSDN
 vRouter Agent sends requests to the Forwarder.
 
+??? This tutorial not only shows how to implement a simple network
+configuration using OpenSDN dataplane component vRouter Forwarder, but
+also demonstrates it's main ????
+
 The sketch of the setup is shown on Fig. P1.
 
 A. Basic preparation steps
@@ -562,8 +566,13 @@ Finally, it is recommended to check UDP connection using **nc** utility:
 3) try typing messages in one **nc** window (**nc** prompt) to see
 them appearing in another **nc** window.
 
-Conclusions
------------
+Closure
+-------
+
+This section collects definitions of the main vRouter Forwarder
+configuration elements employed for packets forwarding inside
+OpenSDN dataplane and gives a brief overview of utilities for
+managing and monitoring a virtual network configuration.
 
 ### OpenSDN data plane basic defintions
 
@@ -621,13 +630,19 @@ tunnel) types.
 
 ### OpenSDN dataplane utilities
 
-- vrcli
-- vif
-- vrfdump
-- nh
-- mpls
-- rt
-- dropstats
+Next OpenSDN tools (from **contrail-tools** image) can be used for manipulation and
+inspection of the dataplane state:
+
+- **vrcli** sends requests (specified in XML files) into vRouter Forwarder to
+alter it's state;
+- **vif** lists virtual and physcial interfaces attached to the vRouter
+Forwarder;
+- **vrfdump** prints a list of VRF tables available on the vRouter Forwarder;
+- **nh** gives a list of nexthops created at the vRouter Forwarder;
+- **mpls** returns a list of available MPLS labels;
+- **rt** prints all L3 and L2 routes from the vRouter Forwarder VRF tables;
+- **dropstats** outputs error messages arising during packets transmission
+in the vRouter Forwarder.
 
 Bibliography
 ------------
