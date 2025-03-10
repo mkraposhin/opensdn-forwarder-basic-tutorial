@@ -257,18 +257,18 @@ D. Configuration of routing information
 
 Constants can be found inside https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py
 
-OpenSDN vRouter Forwarder uses linux the Netlink protocol to receive
+OpenSDN vRouter Forwarder uses the Netlink protocol to receive
 requests and send responses. Configuration requests can be written
 in the form of XML files, then the Sandesh-based utility **vrcli** reads
-an XML, decodes it's content encodes it into controlling messages and
+an XML, decodes it's content, encodes it into controlling messages and
 sends them to vRouter Forwarder. All requests from this tutorial
 are located in [xml_reqs](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_hugepages_conf.xml)
 folder. **vrcli** can work both with vRouter running in DPDK or linux
 kernel module modes. To make it working in the linux kernel module an
-option **--vr_kmode** must be passed during an invocation of the utility.
+option **--vr_kmode** must be passed during the invocation of the utility.
 
-Before working vRouter Forwarder, it must be instructed to initialize
-important structure in memory, such as Forwarding Information Base (FIB)
+Before working with vRouter Forwarder, it must be instructed to initialize
+important structures in memory, such as Forwarding Information Base (FIB)
 tables, VRF tables, etc. Whereas vRouter Forwarder is able to work with
 hugepages, the functionality is not used in this lab and memory is initialized
 by passing empty list of files where memory is mapped. The corresponding
@@ -276,45 +276,50 @@ request is stored in [set_hugepages_conf.xml](https://github.com/mkraposhin/open
 file.
 
 We invoke the request from **contrail-tools** container using **vrcli**
-command as follows:
+command as follows (in the directory where the tutorial repository was
+cloned into):
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_hugepages_conf.xml
 
-As a response we must see (!!! to check !!!):
+As a response we must see:
 
-    Running Sandesh request ...
+    Running Sandesh request...
 
-We can check that the operation was succesfull by invoking:
+Usually this means that the request producing such message was accepted and 
+processed. We can check that the operation was succesfull by invoking:
 
-    rt --dump ... --family bridge?
+    rt --dump 0 --family bridge
 
 If one doesn't see error messages and sees instead empty routing tables,
 then it means that vRouter Forwarder memory has been initialized
-successfully, see Fig. B-1?
+successfully, see Fig. D-1.
+
+![Fig. D1: An example of "rt" output in contrail-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-1.png)
+*Fig. D1: An example of "rt" output in contrail-tools*
 
 Next we must adjust the VRF table which is meant for keeping routing
 information for packets travelling between **cont1** and **cont2**. In
 OpenSDN dataplane, network traffic is switched between endpoints 
 (VMs, containers, etc) of a hypervisor according to isolated routing
-and forwarding tables united as a VRF table which has it's own identifier.
+and forwarding tables stored as a VRF table which has it's own identifier.
 Every vRouter Forwarder can have up to 65536 VRF tables with identifiers
 from 0 to 65535. And every virtual or physical interface connected to 
-vRouter Forwarder and intended for overlay packets switching must be
+vRouter Forwarder (and intended for overlay packets switching) must be
 linked with a VRF table.
 
-We will use VRF table zero in this tutorial. To create this element in
+We will use VRF table zero (0) in this tutorial. To create this element in
 vRouter Forwarder we'll use a request stored in
 [set_vrf.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vrf.xml)
 file. The request (**vr_vrf_req**) is submitted to vRouter Forwarder as next:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vrf.xml
 
-We can verify that VRF table 0 is created using vrfdump utility:
+We can verify that VRF table 0 has been created using **vrftable** utility:
 
-    vrfdump
+    vrftable --dump
 
 Before setting up routing information it's necessary to update configuration of
-virtual interfaces in vRouter Forwarder. This is achieved by calling request
+virtual interfaces in vRouter Forwarder. This is achieved by calling a request
 **vr_interface_req** stored in files [set_vif1_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif1_ip.xml) and [set_vif2_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif2_ip.xml) for containers **cont1** and **cont2** respectively.
 
 However, these requests must be modified before their invocation. Namely:
@@ -325,34 +330,39 @@ from the host OS;
 attached to this interface.
 
 We take **vifr_idx** from from the output of **ip a** command: it is a number
-before colon preceding the name of the corresponding interface (**veth1**
-or **veth2**), see Fig. D-1 (??)
+before a colon preceding the name of the corresponding interface (**veth1**
+or **veth2**), see Fig. C1.
 
-The value of IPv4 address is submitted into **vr_interface_req** as an
+The value of IPv4 address is submitted into **vr_interface_req** as a
 4-byte integer number, therefore, we must convert IP addresses from the
 network configuration introduced earlier:
 - 10.1.1.11 converts into 11\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
 184615179;
-- 10.1.1.22 converts into 22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
-369164566.
+- 10.1.1.22 converts into
+22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or 369164566.
 
-For the nexthop identifier (or **vifr_nh_id** field) we must agree here,
+For the nexthop identifier (**vifr_nh_id** field) we must agree here,
 because we do not have any nexthops in vRouter Forwarder now and these
 numbers are arbitrary (i.e. they don't need to follow any rules). Let's
 choose nexthop number 1 for virtual interface 1 (**veth1**) and nexthop 2 for
 virtual interface 2 (**veth2**).
 
-Then we invoke our requests:
+Then we invoke our requests in **contrail-tools** container:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif1_ip.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif2_ip.xml
 
-If requests are accepted by OpenSDN vRouter Forwarder, we must see:
+If requests are accepted by OpenSDN vRouter Forwarder, we must see again:
 
-    Sandesh request ... (!!!???!!!)
+    Running Sandesh request...
 
 Then we can **vif** utility to verify our interface configuration in OpenSDN
-vRouter Forwarder (see Fig D-2 for example).
+vRouter Forwarder (see Fig D-2 for example):
+
+    vif --list
+
+![Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-2.png)
+*Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces*
 
 Nexthops 1 and 2 are referenced by out interfaces, but they do not present in
 our configuration and this can be checked with the utility **nh**:
@@ -367,9 +377,9 @@ and
 (set_cont2_br_nh_req.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh_req.xml]
 respectively.
 
-To adjust these templates to the local configuration next fields must be corrected:
-- <nhr_encap_oif_id></nhr_encap_oif_id> storing labels of interfaces associated with
-the given nexthop;
+To adjust these templates for the local configuration next fields must be corrected:
+- <nhr_encap_oif_id></nhr_encap_oif_id> storing labels of interfaces **veth1** 
+or **veth2** associated with the given nexthop;
 - <nhr_encap></nhr_encap> storing local (the container or the VM) MAC address of
 the interface with we associate the nexthop.
 
@@ -377,7 +387,7 @@ For the interface label (ID) we replace number 0:
 
     <element>0</element>
 with the actual ID of **veth1** or **veth2** interface from the output of
-**vif** command (**contrail-tools** container):
+**vif** command (**contrail-tools** container), see Fig. D2 for example:
 
     vif --list
 
@@ -400,7 +410,7 @@ If the repository was cloned into folder **/tut-rep** of **cont1** and
 **cont2** containers, then we can run next commands from the host OS:
 
     sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth1c
-    sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth2c
+    sudo docker exec -ti cont2 bash /tut-rep/scripts/devmac2list veth2c
 
 The output of these commands must be similar to Fig. D-3. Note, that here we
 use **veth1c** and **veth2c** instead of **veth1** and **veth2** because
@@ -699,7 +709,7 @@ inspection of the dataplane state:
 alter it's state;
 - **vif** lists virtual and physcial interfaces attached to the vRouter
 Forwarder;
-- **vrfdump** prints a list of VRF tables available on the vRouter Forwarder;
+- **vrftable** prints a list of VRF tables available on the vRouter Forwarder;
 - **nh** gives a list of nexthops created at the vRouter Forwarder;
 - **mpls** returns a list of available MPLS labels;
 - **rt** prints all L3 and L2 routes from the vRouter Forwarder VRF tables;

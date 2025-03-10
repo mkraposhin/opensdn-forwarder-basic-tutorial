@@ -7,7 +7,7 @@ then
 fi
 
 dev_name=$1
-mac_parts=($(ip a | grep "$dev_name:" -A 1 | tail -n 1))
+mac_parts=($(ip a | grep "$dev_name" -A1 | head -n 2 | tail -n 1))
 mac=${mac_parts[1]}
 mac_octs=`echo "$mac" | sed -r 's/:/ /g'`
 echo "$mac_octs"
