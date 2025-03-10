@@ -372,9 +372,9 @@ our configuration and this can be checked with the utility **nh**:
 To add a nexthop into OpenSDN vRouter Forwarder table one uses **vr_nexthop_req**
 requests. Examples of these requests for nexthops associated with interfaces
 **veth1** and **veth2** are stored in files
-(set_cont1_br_nh.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_nh.xml]
+[set_cont1_br_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_nh.xml)
 and
-(set_cont2_br_nh.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh.xml]
+[set_cont2_br_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh.xml)
 respectively.
 
 To adjust these templates for the local configuration next fields must be corrected:
