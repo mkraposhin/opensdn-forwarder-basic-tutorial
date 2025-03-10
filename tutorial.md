@@ -437,6 +437,12 @@ nexthops and we can also compare MAC strings in nexthops 1 and 2 with
 **veth1c** and **veth2c** MAC addresses (can be obtained with **ip**
 command inside the corresponding containers).
 
+![Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-3.png)
+*Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request*
+
+![Fig. D4: An example of "nh" output in contrail-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-4.png)
+*Fig. D4: An example of "nh" output in contrail-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c*
+
 While our interfaces are now associated with nexthops, vRouter Forwarder
 still doesn't have enough information to switch packets between **veth1c**
 and **veth2c** because there is no association between a packet header
