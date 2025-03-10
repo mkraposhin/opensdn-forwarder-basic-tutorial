@@ -65,14 +65,14 @@ necessary network utils inside it, see Fig. A1:
 
         sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash:
         apt update
-        apt install iproute2 iputils-ping netcat git -y
+        apt install iproute2 iputils-ping netcat git nano vi -y
 
 6. Run container number 2 (it will have name **cont2**) and install
 necessary network utils inside it, see Fig. A2:
 
         sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash:
         apt update
-        apt install iproute2 iputils-ping netcat git -y
+        apt install iproute2 iputils-ping netcat git nano vi -y
 
 After all these actions we must have 2 Ubuntu 22 containers running with
 names **cont1** and **cont2** inside the host operating system.
@@ -372,9 +372,9 @@ our configuration and this can be checked with the utility **nh**:
 To add a nexthop into OpenSDN vRouter Forwarder table one uses **vr_nexthop_req**
 requests. Examples of these requests for nexthops associated with interfaces
 **veth1** and **veth2** are stored in files
-(set_cont1_br_nh_req.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_nh_req.xml]
+(set_cont1_br_nh.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_nh.xml]
 and
-(set_cont2_br_nh_req.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh_req.xml]
+(set_cont2_br_nh.xml)[https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh.xml]
 respectively.
 
 To adjust these templates for the local configuration next fields must be corrected:
@@ -415,14 +415,16 @@ If the repository was cloned into folder **/tut-rep** of **cont1** and
 The output of these commands must be similar to Fig. D-3. Note, that here we
 use **veth1c** and **veth2c** instead of **veth1** and **veth2** because
 we need MAC addresses of the interfaces from containers, not from the host OS.
+Also, whereas we take values from **cont1** and **cont2** containers, we
+modify XML files with requests inside **contrail-tools** container.
 
 Afterwards values can be copied into requests stored in
 **set_cont1_br_nh_req.xml** and **set_cont2_br_nh_req.xml** files in 
 **contrail-tools** container. Then we run these requests in order to add
 nexthops into vRouter Forwarder (**contrail-tools** container):
 
-    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_nh_req.xml
-    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_nh_req.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_nh.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_nh.xml
 
 Now we can check that nexthops were added by typing in **contrail-tools**
 container:
