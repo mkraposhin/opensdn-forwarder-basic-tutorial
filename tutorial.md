@@ -477,10 +477,13 @@ The results of the command can be verified with **mpls** utility in
 
     mpls --dump
 
+![Fig. D5: An example of "mpls" output in contrail-tools with the list of new MPLS labels](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-5.png)
+*Fig. D5: An example of "mpls" output in contrail-tools with the list of new MPLS labels*
+
 L2 route records are added via **vr_route_req** requests. The request
 must contain: a VRF table ID (0 in our example), a family type (7 which is
-basically the value of AF_BRIDGE constant), the label of a nexthop (1 or 2 in
-this tutorial) and a prefix which is determined by a MAC address of
+basically the value of AF_BRIDGE constant), the label of a nexthop (1 or 2 for
+these L2 routes) and a prefix which is determined by a MAC address of
 a container or a VM interface (**veth1c** or **veth2c** in this 
 tutorial). Examples of this request adding L2 routes to interfaces
 **veth1c** and **veth2c** are stored in 
@@ -497,7 +500,8 @@ using script **devmac2list** by running next commands from the host OS:
 
 The output of each command must be substituted into **rtr_mac** field of
 **set_cont1_br_rt.xml** and **set_cont2_br_rt.xml** inside **contrail-tools**
-containers. Next we run **vrcli** command inside **contrail-tools**:
+container (instead of lines <element>1</element> ... <element>6</element>).
+Next we run **vrcli** command inside **contrail-tools**:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_rt.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_rt.xml
@@ -509,7 +513,7 @@ container (here 0 corresponds to the label of the VRF table):
 
 The output of the command above must be similar to Fig. D-6. Although the
 current configuration of vRouter Forwarder allows to trasmit L2 fragments
-betweng our containers **cont1** and **cont2**, it is of little use because
+between containers **cont1** and **cont2**, it is of little use because
 usually we operate with L3 packets and therefore we need L3 nexthops and
 L3 routes in order to use ping. However, even this very simple configuration
 demonstrates how data in general is organized inside vRouter Forwarder.
@@ -519,9 +523,16 @@ of packets between virtual machines or containers (see Fig. D-7):
 - an interface table specifying the association between an interface
 (attached to a VM or a container) with a VRF table and with a nexthop;
 - a nexthop table defining a list of nexthops (destinations);
-- bridge and inet routes tables associated with each VRF table
+- bridge and inet routes tables associated with a VRF table
 defining which nexthops must be applied to packets depending on their
 outer headers.
+
+![Fig. D6: An example of "rt" output in contrail-tools with the list of new L2 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-6.png)
+*Fig. D6: An example of "rt" output in contrail-tools with the list of new L2 routes*
+
+
+![Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-7.png)
+*Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table*
 
 At the next step L3 routes are to be added to enable transmission of L3
 packets through OpenSDN vRouter Forwarder. As with L2 routes, the corresponding
@@ -535,7 +546,7 @@ Labels 11 and 22 were selected for L3 nexthops associated with interfaces
 **veth1c** and **veth2c** (see Fig. D-7). The templates also require
 modification of the interface MAC address in **nhr_encap** field (the procedure
 is similar to the used previously for L2 nexthops) and the interface label
-**nhr_encap_oif_id** configuration (same as for L2 nexthops). Finally,
+**nhr_encap_oif_id** must be set accordingly (same as for L2 nexthops). Finally,
 the nexthops are added in **contrail-tools** container using the commands:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_inet_nh.xml
@@ -547,6 +558,10 @@ can be verified using **nh** command inside **contrail-tools** container:
     nh --list
 
 The reference output of the command is presented in Fig. D-8.
+
+![Fig. D8: An example of "nh" output in contrail-tools with the list of new nexthops](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-8.png)
+*Fig. D8: An example of "nh" output in contrail-tools with the list of new nexthops*
+
 Finally, L3 routes are added using the requests similar to what have been
 used for L2 routes. The examples of requests are stored in
 [set_cont1_inet_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_inet_rt.xml)
@@ -575,6 +590,9 @@ The resulting configuration can be verified using **rt** command in
 
 The output of the commands should be similar to the presented on Fig. D-9.
 
+![Fig. D9: An example of "rt" output in contrail-tools with the list of new L3 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-9.png)
+*Fig. D9: An example of "rt" output in contrail-tools with the list of new L3 routes*
+
 E. Verification of connectivity between containers
 --------------------------------------------------
 
@@ -590,9 +608,9 @@ of packets between them. Obviously, the configuration can be verified using
 container **cont1**:
         ping -n 10.1.1.22
 
-It is seen from the output (see Fig. E-1 for example) that while there are
-ICMP requests from 10.1.1.11 to 10.1.1.22, there are no responds from the
-latter. And in addition to ICMP packets there are many ARP requests
+It is seen from the output (see Fig. E-1 for example) that there are no
+ICMP requests from 10.1.1.11 to 10.1.1.22, therefore no responds from the
+latter. However, there are many ARP requests
 about resolution of MAC address for IP 10.1.1.11. Hence, it can be concluded
 that possibly the current vRouter Forwarder configuration doesn't transmit
 ARP packets from **cont1** to **cont2** or in the reverse direction. The
@@ -606,8 +624,18 @@ Forwarder during transmission of packets. Since error messages are stored
 inside vRouter Forwarder separately for each CPU, the option **--log 0**
 tells **dropstats** to collect data from all buffers into one output stream.
 It is seen from the example output shown on Fig. E-2 that vRouter Forwarder
-can't find an L2 router for broadcast MAC address FF:FF:FF:FF:FF:FF. Thus,
-we need a route with a corresponding nexthop that redirects ARP packets
+can't find an L2 router for broadcast MAC address FF:FF:FF:FF:FF:FF. 
+
+
+![Fig. E1: An example of "tcpdump" with ARP requests](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-1.png)
+*Fig. E1: An example of "tcpdump" with ARP requests*
+
+
+![Fig. E2: An example of "dropstats" output in contrail-tools showind last forwarding error messages](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-2.png)
+*Fig. E2: An example of "dropstats" output in contrail-tools showind last forwarding error messages*
+
+
+Thus, we need a route with a corresponding nexthop that redirects ARP packets
 destined to FF:FF:FF:FF:FF:FF to all virtual interfaces except the
 ingress one. This type of nexthops are called Composite in OpenSDN, while
 such routes are called multicast.
@@ -630,11 +658,14 @@ container:
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mcast_br_nh.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mcast_br_rt.xml
 
-we can now verify the modified list of nexthops (see Fig. E-3) and the
-modified list of L2 routes (see Fig. E-4) have accommodated the new records.
+we can now verify the modified list of nexthops and the
+modified list of L2 routes (see Fig. E-3) have accommodated the new records.
+
+![Fig. E3: An example of "nh" and "rt" output in contrail-tools showing new nexthops and bridge routes tables](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-3.png)
+*Fig. E3: An example of "nh" and "rt" output in contrail-tools showing new nexthops and bridge routes tables*
 
 Now **ping** command from 10.1.1.11 to 10.1.1.22 and in the reverse direction
-must work properly (see Fig E-5).
+must work properly (see Fig E-4).
 
 Finally, it is recommended to check UDP connection using **nc** utility:
 
@@ -648,6 +679,9 @@ Finally, it is recommended to check UDP connection using **nc** utility:
 
 3) try typing messages in one **nc** window (**nc** prompt) to see
 them appearing in another **nc** window.
+
+![Fig. E4: An example of "ping" output in cont1 showing successfull ICMP connection between 10.1.1.11 and 10.1.1.22](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-4.png)
+*Fig. E4: An example of "ping" output in cont1 showing successfull ICMP connection between 10.1.1.11 and 10.1.1.22*
 
 Closure
 -------
