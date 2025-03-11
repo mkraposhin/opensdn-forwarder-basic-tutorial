@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<test>
+  <test_name> sandesh req</test_name>
+  <message>
+    <vr_mpls_req>
+      <h_op type="i32" identifier="1">0</h_op>
+      <mr_label type="i32" identifier="2">1</mr_label>
+      <mr_nhid  type="i32" identifier="4">1</mr_nhid>
+    </vr_mpls_req>
+  </message>
+</test>

@@ -444,22 +444,24 @@ command inside the corresponding containers).
 *Fig. D4: An example of "nh" output in contrail-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c*
 
 While our interfaces are now associated with nexthops, vRouter Forwarder
-still doesn't have enough information to switch packets between **veth1c**
+still doesn't have enough information to transfer packets between **veth1c**
 and **veth2c** because there is no association between a packet header
 and an interface accepting the packet. This gap is filled with
-forwarding tables. Firstly, we need a bridge or L2 forwarding table
+forwarding tables. Firstly, we need a bridge (L2) forwarding table
 records (or route records) to enable transport of Ethernet frames
-through vRouter Forwarder.  A route record is basically a structure
+through vRouter Forwarder. A route record is basically a structure
 containing a prefix address (MAC, IPv4 or IPv6) and the link to the
-a nexthop defining what to do next the packet whose outer header matches
-the route prefix address. 
+nexthop defining what to do next with the packet whose outer header matches
+the route prefix address.
 
 Before adding a route record we have to associate our nexthops
 with MPLS labels since OpenSDN is MPLS-based SDN and it requires
 this type of addressing for bridge communications. MPLS labels
 are introducted using **vr_mpls_req** requests. The example request
 is stored in
-[set_mpls.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mpls.xml)
+[set_mpls1.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mpls1.xml)
+and
+[set_mpls2.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_mpls2.xml)
 file. As it is seen from the content of the file, the request is quite simple:
 it just associates a nexthop number with an MPLS label number.
 
@@ -467,7 +469,8 @@ In order to create MPLS labels for our nexthops 1 and 2 it's necessary
 to run the request **set_mpls.xml** file from **contrail-tools**
 container:
 
-vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls1.xml
+    vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls2.xml
 
 The results of the command can be verified with **mpls** utility in
 **contrail-tools** container (see Fig. D-5 for example):
@@ -727,3 +730,4 @@ in the vRouter Forwarder.
 Bibliography
 ------------
 
+???
