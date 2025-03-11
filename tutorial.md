@@ -689,7 +689,8 @@ Closure
 This section collects definitions of the main vRouter Forwarder
 configuration elements employed for packets forwarding inside
 OpenSDN dataplane and gives a brief overview of utilities for
-managing and monitoring a virtual network configuration.
+managing and monitoring a virtual network configuration at this
+layer.
 
 ### OpenSDN data plane basic defintions
 
