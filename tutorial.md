@@ -40,10 +40,10 @@ From the operating system point of view we will have 2 containers connected
 to the host OS and to the vRouter Forwarder via veth pairs (
 **veth1**/**veth1c** and **veth2**/**veth2c**), Fig. I2.
 
-![Fig. I1: The considered virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.png)
+![Fig. I1: The considered virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.jpg)
 *Fig. I1: The considered virtual network configuration design*
 
-![Fig. I2: The virtual network configuration implementation](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-2.png)
+![Fig. I2: The virtual network configuration implementation](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-2.jpg)
 *Fig. I2: The virtual network configuration implementation*
 
 A. Basic preparation steps
@@ -531,7 +531,7 @@ outer headers.
 *Fig. D6: An example of "rt" output in contrail-tools with the list of new L2 routes*
 
 
-![Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-7.png)
+![Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-7.jpg)
 *Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table*
 
 At the next step L3 routes are to be added to enable transmission of L3
