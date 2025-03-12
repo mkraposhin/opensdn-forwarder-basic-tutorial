@@ -518,11 +518,11 @@ usually we operate with L3 packets and therefore we need L3 nexthops and
 L3 routes in order to use ping. However, even this very simple configuration
 demonstrates how data in general is organized inside vRouter Forwarder.
 Namely, we have several interconnected tables responsible for transmission
-of packets between virtual machines or containers (see Fig. D-7):
+of packets between virtual machines or containers (see Fig. D7):
 - a VRFs table defining list of VRF tables with isolated routing information;
-- an interface table specifying the association between an interface
+- an interfaces table specifying the association between an interface
 (attached to a VM or a container) with a VRF table and with a nexthop;
-- a nexthop table defining a list of nexthops (destinations);
+- a nexthops table defining a list of nexthops (destinations);
 - bridge and inet routes tables associated with a VRF table
 defining which nexthops must be applied to packets depending on their
 outer headers.
