@@ -769,4 +769,4 @@ in the vRouter Forwarder.
 Bibliography
 ------------
 
-RFC 4364: BGP/MPLS IP Virtual Private Networks (VPNs)
+1. RFC 4364: BGP/MPLS IP Virtual Private Networks (VPNs)
