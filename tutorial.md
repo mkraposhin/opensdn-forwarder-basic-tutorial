@@ -98,9 +98,9 @@ and **cont2**.
 B. Installation of vRouter Forwarder and utilities
 --------------------------------------------------
 
-Here are technical steps to build and run vRouter Forwarder manually are
-covered in details since usually this process is completed automatically
-using some installation scripts, which are not used because thhis installation
+The technical steps to build and run vRouter Forwarder manually are
+covered in details here since usually this process is completed automatically
+using some installation scripts, which are not used because this installation
 is claimed to be minimal.
 
 1. Install gcc compiler and other tools in order to compile and install vRouter
@@ -692,6 +692,10 @@ OpenSDN dataplane and gives a brief overview of utilities for
 managing and monitoring a virtual network configuration at this
 layer.
 
+If you find any mistake or inaccuraties in the text, please report them via
+[Issues](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial)
+section of the repository.
+
 ### OpenSDN data plane basic defintions
 
 Perhaps, this is the most important part of the document since it introduces
@@ -765,4 +769,4 @@ in the vRouter Forwarder.
 Bibliography
 ------------
 
-???
+RFC 4364: BGP/MPLS IP Virtual Private Networks (VPNs)
