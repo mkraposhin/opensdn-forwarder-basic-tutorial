@@ -708,14 +708,14 @@ communication between containers.
 1. A **virtual interface** (or VIF) is a connected pair of interfaces with
 one of them pointing into a virtual machine or a container and another one
 attached to the host operating system where virtual resources (VMs or 
-other type) are managed. Before using with vRouter Forwarder a virtual
+other type) are managed. Before being used with vRouter Forwarder a virtual
 interface must be plugged in using the **vif** utility or a Sandesh
 request.
 2. A **VRF table** provides a unique and isolated environment to store
 routing (L3) and forwarding (L2) tables for switching packets between
-virtual interfaces associated with a given identifier. The IP or MAC
+virtual interfaces associated with a given identifier (a number). The IP or MAC
 addresses from two different VRF tables on a vRouter Forwarder can
-intersect because of isolation principle.
+intersect because of this isolation principle.
 3. A **route** is a record in a routing (L3) or a forwarding (L2) table having
 the prefix (a MAC or IP address) that uniquely identify it and the pointer to
 a **nexthop** intended for packets switching management in vRouter
