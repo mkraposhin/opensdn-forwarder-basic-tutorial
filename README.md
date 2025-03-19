@@ -7,7 +7,7 @@ OpenSDN contrail-tools image and 2 containers with Ubuntu 22.
 The repository contains has next structure:
 
 - README.md contains this message;
-- tutorial.md contains instructions, definitions and explanationsl=;
+- tutorial.md contains instructions, definitions and explanations;
 - figs/ contains figures used in the tutorial text (tutorial.md);
 - scripts/ contains bash scripts simplifying configuration process described in tutorial.md;
 - xml_reqs/ contains examples of Sandesh requests to manipulate OpenSDN vRouter Forwarder configuration.
