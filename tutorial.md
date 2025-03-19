@@ -535,7 +535,7 @@ outer headers.
 
 
 ![Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-7.jpg)
-*Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table*
+*Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table*. An arrow shows that an element references another one.
 
 At the next step L3 routes are to be added to enable transmission of L3
 packets through OpenSDN vRouter Forwarder. As with L2 routes, the corresponding
