@@ -693,7 +693,7 @@ managing and monitoring a virtual network configuration at this
 layer.
 
 If you find any mistake or inaccuraties in the text, please report them via
-[Issues](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial)
+[Issues](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/issues)
 section of the repository.
 
 ### OpenSDN data plane basic defintions
