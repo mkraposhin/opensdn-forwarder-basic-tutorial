@@ -124,7 +124,7 @@ at step 3 in the host OS:
 
         sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules opensdn/tf-vrouter-kernel-build-init:latest
 
-8. The build and installation process should output information about the progress on the screen. At the file vrouter.ko must appear inside /lib/modules/`uname -r`/updates/dkms of the host OS filesystem (see Fig. B1). Install the compiled vRouter Forwarder module into memory using modprobe
+8. The build and installation process should output information about the progress on the screen. The file vrouter.ko must appear inside /lib/modules/$(uname -r)/updates/dkms of the host OS filesystem (see Fig. B1). Install the compiled vRouter Forwarder module into memory using modprobe
 in the host OS:
 
         sudo modprobe vrouter
@@ -166,13 +166,13 @@ The default bridge interfaces already added by the docker system into the
 containers are used for external communication with Internet, hence it is
 better not to modify them.
 
-A virtual interface pair is to be added to each container and then it
+An additional virtual interface pair is to be added to each container and then it
 must be connected to vRouter Forwarder to enable packet switching between
 these containers using OpenSDN. We'll use linux network namespaces to create
 virtual interface pairs.
 
 Since each container works in it's network namespace, we can create a linux
-virtual interface pair (**veth**) and move one interface from these pair
+virtual interface pair (**veth**) and move one interface from this pair
 into the container's network namespace. Thus we'll have network connectivity
 between the container's and the host OS environments.
 
@@ -255,8 +255,6 @@ among which we should see records for **veth1** and **veth2**, Fig. C4.
 D. Configuration of routing information
 ---------------------------------------
 
-Constants can be found inside https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py
-
 OpenSDN vRouter Forwarder uses the Netlink protocol to receive
 requests and send responses. Configuration requests can be written
 in the form of XML files, then the Sandesh-based utility **vrcli** reads
@@ -310,7 +308,7 @@ linked with a VRF table.
 We will use VRF table zero (0) in this tutorial. To create this element in
 vRouter Forwarder we'll use a request stored in
 [set_vrf.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vrf.xml)
-file. The request (**vr_vrf_req**) is submitted to vRouter Forwarder as next:
+file. The request (**vr_vrf_req**) is submitted to vRouter Forwarder as follows:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vrf.xml
 
@@ -323,10 +321,10 @@ virtual interfaces in vRouter Forwarder. This is achieved by calling a request
 **vr_interface_req** stored in files [set_vif1_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif1_ip.xml) and [set_vif2_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif2_ip.xml) for containers **cont1** and **cont2** respectively.
 
 However, these requests must be modified before their invocation. Namely:
-- field <vifr_idx></vifr_idx> must contain actual index of an interface
+- field <vifr_idx></vifr_idx> must contain the actual index of an interface
 from the host OS;
-- field <vifr_ip></vifr_ip> must contain IPv4 address of an interface;
-- field <vifr_nh_id></vifr_nh_id> must contain identifier of a nexthop
+- field <vifr_ip></vifr_ip> must contain the IPv4 address of an interface;
+- field <vifr_nh_id></vifr_nh_id> must contain the identifier of the nexthop
 attached to this interface.
 
 We take **vifr_idx** from from the output of **ip a** command: it is a number
@@ -364,7 +362,7 @@ vRouter Forwarder (see Fig D-2 for example):
 ![Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-2.png)
 *Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces*
 
-Nexthops 1 and 2 are referenced by out interfaces, but they do not present in
+Nexthops 1 and 2 are referenced by our interfaces, but they do not present in
 our configuration and this can be checked with the utility **nh**:
 
     nh --list
@@ -418,7 +416,7 @@ we need MAC addresses of the interfaces from containers, not from the host OS.
 Also, whereas we take values from **cont1** and **cont2** containers, we
 modify XML files with requests inside **contrail-tools** container.
 
-Afterwards values can be copied into requests stored in
+The obtained values can be copied into requests stored in
 **set_cont1_br_nh_req.xml** and **set_cont2_br_nh_req.xml** files in 
 **contrail-tools** container. Then we run these requests in order to add
 nexthops into vRouter Forwarder (**contrail-tools** container):
@@ -436,6 +434,11 @@ output we can verify that the correct interfaces were associated with our
 nexthops and we can also compare MAC strings in nexthops 1 and 2 with
 **veth1c** and **veth2c** MAC addresses (can be obtained with **ip**
 command inside the corresponding containers).
+
+Many vRouter Forwarder creation or modification requests also uses different
+flags and options to specify operation regimes. The values of these flags
+can be found inside 
+[https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py](https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py)
 
 ![Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-3.png)
 *Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request*
