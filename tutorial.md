@@ -381,7 +381,7 @@ or **veth2** associated with the given nexthop;
 - <nhr_encap></nhr_encap> storing local (the container or the VM) MAC address of
 the interface with we associate the nexthop.
 
-For the interface label (ID) we replace number 0:
+For the interface label (ID) we replace value "0":
 
     <element>0</element>
 with the actual ID of **veth1** or **veth2** interface from the output of
