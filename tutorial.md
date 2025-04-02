@@ -63,14 +63,14 @@ A. Basic preparation steps
 5. Run container number 1 (it will have name **cont1**) and install
 necessary network utils inside it, see Fig. A1:
 
-        sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash:
+        sudo docker run --cap-add=NET_ADMIN --name cont1 -ti ubuntu:jammy bash
         apt update
         apt install iproute2 iputils-ping netcat git nano vi -y
 
 6. Run container number 2 (it will have name **cont2**) and install
 necessary network utils inside it, see Fig. A2:
 
-        sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash:
+        sudo docker run --cap-add=NET_ADMIN --name cont2 -ti ubuntu:jammy bash
         apt update
         apt install iproute2 iputils-ping netcat git nano vi -y
 
