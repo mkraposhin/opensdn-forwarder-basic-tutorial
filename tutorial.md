@@ -201,7 +201,7 @@ Firstly, we create a virtual pair for container **cont1** on the host OS:
 
 Then we create a virtual pair for container **cont2**:
 
-    sudo bash tut-rep/scripts/make-veth veth2 veth2c cont1 10.1.1.22/24
+    sudo bash tut-rep/scripts/make-veth veth2 veth2c cont2 10.1.1.22/24
 
 After these steps we must see 2 new interfaces in the host OS (Fig. C1)
 and one new interface in **cont1** and **cont** (Fig. C2 and Fig. C3
