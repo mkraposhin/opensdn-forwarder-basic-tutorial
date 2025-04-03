@@ -78,7 +78,7 @@ After all these actions we must have 2 Ubuntu 22 containers running with
 names **cont1** and **cont2** inside the host operating system.
 
 Finally, its necessary to download the tutorial folders from GitHub repository
-into the filesystems of the host OS and containers **cont1** and **cont2**:
+into the filesystems of the **host OS / Ubuntu OS**, containers **cont1** and **cont2**:
 
     git clone https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial.git tut-rep
 
