@@ -139,7 +139,7 @@ in the host OS:
 
 11. Run contrail-tools in a separate terminal of the host OS:
 
-        sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/conrail-tools:latest
+        sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/contrail-tools:latest
 
 12. Copy the tutorial repository inside the root (/) folder of **contrail-tools** container
 from the host OS
