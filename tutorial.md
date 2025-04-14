@@ -491,11 +491,16 @@ The results of the command can be verified with **mpls** utility in
 *Fig. D5: An example of "mpls" output in contrail-tools with the list of new MPLS labels*
 
 L2 route records are added via **vr_route_req** requests. The request
-must contain: a VRF table ID (0 in our example), a family type (7 which is
-basically the value of AF_BRIDGE constant), the label of a nexthop (1 or 2 for
-these L2 routes) and a prefix which is determined by a MAC address of
+must contain: 
+- a VRF table ID (0 in our example) defined in the field <rtr_vrf_id></rtr_vrf_id>;
+- a family type (7 which is basically the value of AF_BRIDGE constant) defined
+in the field <rtr_family></rtr_family>
+- the label of a nexthop (1 or 2 for these L2 routes) defined in <rtr_nh_id></rtr_nh_id>;
+- and a prefix which is determined by a MAC address of
 a container or a VM interface (**veth1c** or **veth2c** in this 
-tutorial). Examples of this request adding L2 routes to interfaces
+tutorial) and is defined in <rtr_mac></rtr_mac> field.
+
+Examples of this request adding L2 routes to interfaces
 **veth1c** and **veth2c** are stored in 
 [set_cont1_br_rt.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont1_br_rt.xml)
 and
