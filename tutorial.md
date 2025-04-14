@@ -152,7 +152,7 @@ tabs) in the host OS:
         sudo docker start cont1
         sudo docker start cont2
 
-    and then in separate terminals:
+    and then start the bash interpreter in separate terminals:
     - for **cont1**:
 
         sudo docker exec -ti cont1 bash
