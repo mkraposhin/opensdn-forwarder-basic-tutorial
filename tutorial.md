@@ -442,7 +442,7 @@ nexthops and we can also compare MAC strings in nexthops 1 and 2 with
 **veth1c** and **veth2c** MAC addresses (can be obtained with **ip**
 command inside the corresponding containers).
 
-Many vRouter Forwarder creation or modification requests also uses different
+Many vRouter Forwarder creation or modification requests also use different
 flags and options to specify operation regimes. The values of these flags
 can be found inside 
 [https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py](https://github.com/OpenSDN-io/tf-vrouter/blob/master/utils/pylib/constants.py)
