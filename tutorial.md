@@ -155,11 +155,11 @@ tabs) in the host OS:
     and then start the bash interpreter in separate terminals:
     - for **cont1**:
 
-        sudo docker exec -ti cont1 bash
+            sudo docker exec -ti cont1 bash
 
     - for **cont2**:
 
-        sudo docker exec -ti cont2 bash
+            sudo docker exec -ti cont2 bash
 
 ![Fig. B1: An example of the vRouter Forwader build process output](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-B-1.png)
 *Fig. B1: An example of the vRouter Forwader build process output*
