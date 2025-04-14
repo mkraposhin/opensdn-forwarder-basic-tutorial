@@ -515,7 +515,7 @@ using script **devmac2list** by running next commands from the host OS:
 
 The output of each command must be substituted into **rtr_mac** field of
 **set_cont1_br_rt.xml** and **set_cont2_br_rt.xml** inside **contrail-tools**
-container (instead of lines <element>1</element> ... <element>6</element>).
+container (instead of lines `<element>1</element> ... <element>6</element>`).
 Next we run **vrcli** command inside **contrail-tools**:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_rt.xml
