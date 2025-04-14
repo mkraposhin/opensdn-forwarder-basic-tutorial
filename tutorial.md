@@ -284,7 +284,8 @@ As a response we must see:
     Running Sandesh request...
 
 Usually this means that the request producing such message was accepted and 
-processed. We can check that the operation was succesfull by invoking:
+processed. We can check that the operation was succesfull by invoking the
+next command inside **contrail-tools** container:
 
     rt --dump 0 --family bridge
 
