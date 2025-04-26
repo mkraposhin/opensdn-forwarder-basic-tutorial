@@ -342,9 +342,9 @@ The value of IPv4 address is submitted into **vr_interface_req** as a
 4-byte integer number, therefore, we must convert IP addresses from the
 network configuration introduced earlier:
 - 10.1.1.11 converts into 11\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
-184615179;
+184615178;
 - 10.1.1.22 converts into
-22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or 369164566.
+22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or 369164544.
 
 For the nexthop identifier (**vifr_nh_id** field) we must agree here,
 because we do not have any nexthops in vRouter Forwarder now and these
