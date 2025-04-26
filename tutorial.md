@@ -141,7 +141,7 @@ in the host OS:
 
         sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/contrail-tools:latest
 
-12. Copy the tutorial repository inside the root (/) folder of **contrail-tools** container
+12. Copy the tutorial repository into the root (/) folder of **contrail-tools** container
 from the host OS
 
         tar cfz tut-rep.tgz tut-rep && sudo docker cp ./tut-rep.tgz contrail-tools:/tut-rep.tgz && sudo docker exec -ti contrail-tools tar xfz tut-rep.tgz
