@@ -5,7 +5,7 @@
     <vr_interface_req>
       <h_op type="i32" identifier="1">0</h_op>
       <vifr_idx type="i32" identifier="6">0</vifr_idx>
-      <vifr_ip type="u32" identifier="39">184615179</vifr_ip>
+      <vifr_ip type="u32" identifier="39">184615178</vifr_ip>
       <vifr_nh_id type="i32" identifier="48">1</vifr_nh_id>
       <vifr_mac type="list" identifier="38">
         <list type="byte" size="6">
