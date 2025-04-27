@@ -344,7 +344,7 @@ network configuration introduced earlier:
 - 10.1.1.11 converts into 11\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or
 184615178;
 - 10.1.1.22 converts into
-22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or 369164544.
+22\*256\*256\*256 + 1\*256\*256 + 1*256 + 10 or 369164554.
 
 For the nexthop identifier (**vifr_nh_id** field) we must agree here,
 because we do not have any nexthops in vRouter Forwarder now and these
