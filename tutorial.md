@@ -100,8 +100,8 @@ B. Installation of vRouter Forwarder and utilities
 
 The technical steps to build and run vRouter Forwarder manually are
 covered in details here since usually this process is completed automatically
-using some installation scripts, which are not used because this installation
-is claimed to be minimal.
+using some installation scripts, which are not used because this tutorial
+is claimed as minimal.
 
 1. Install gcc compiler and other tools in order to compile and install vRouter
 Forwarder in the host OS:
