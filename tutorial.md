@@ -168,24 +168,24 @@ C. Configuration of containers interfaces
 -----------------------------------------
 
 Now we'll add virtual interfaces to allow communication between containers.
-The default bridge interfaces already added by the docker system into the
+The default bridge interfaces that were already added by the docker system into the
 containers are used for external communication with Internet, hence it is
 better not to modify them.
 
-An additional virtual interface pair is to be added to each container and then it
-must be connected to vRouter Forwarder to enable packet switching between
-these containers using OpenSDN. We'll use linux network namespaces to create
-virtual interface pairs.
+Therefore, an additional virtual interface pair is to be added to each container
+and then connected to vRouter Forwarder to enable packet transfer between
+containers **cont1** and **cont2** using OpenSDN. Linux network namespaces
+will be used to create these virtual interface pairs.
 
 Since each container works in it's network namespace, we can create a linux
 virtual interface pair (**veth**) and move one interface from this pair
 into the container's network namespace. Thus we'll have network connectivity
-between the container's and the host OS environments.
+between the container's and the host OS's environments.
 
 All configuration operations are stored inside 
 [scripts](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/tree/main/scripts)
 folder of the tutorial. The script [make-veth](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/make-veth)
-creates new virtual pair, moves one virtual interface into the specified
+creates a new virtual pair, moves one virtual interface into the specified
 container and assigns it the specified address:
 
     veth_name=$1 #veth1
@@ -217,10 +217,10 @@ Interfaces **veth1** and **veth2** reside in the host OS, while interfaces
 respectively.
 
 Now we must tell OpenSDN vRouter Forwarder to catch packets from interfaces
-**veth1** and **veth2** and switch them. This is achieved using **vif**
+**veth1** and **veth2** and transfer them. This is achieved using **vif**
 utility from OpenSDN contrail-tools package. The utility can be used to
-list interfaces connected to OpenSDN vRouter Forwarder or it can be
-use to connect host OS virtual or physical network interfaces. There
+list interfaces connected to OpenSDN vRouter Forwarder or it can be also
+used to connect host OS virtual or physical network interfaces. There
 is a special script 
 [make-vif](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/make-vif)
 prepared for this tutorial to run this utility:
@@ -233,7 +233,7 @@ prepared for this tutorial to run this utility:
     docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
 
 It is assumed that the container with contrail-tools package is up and running
-under the name **contrail-tools**. Then one types in the host OS:
+under the name **contrail-tools**. If so, then one types in the host OS:
 
     sudo bash tut-rep/scripts/make-vif veth1
     sudo bash tut-rep/scripts/make-vif veth2
