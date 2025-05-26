@@ -133,18 +133,18 @@ in the host OS:
 
         lsmod | grep vrouter
 
-10. Download contrail-tools image in the host OS:
+10. Download opensdn-tools image in the host OS:
 
-        sudo docker pull opensdn/contrail-tools
+        sudo docker pull opensdn/opensdn-tools
 
-11. Run contrail-tools in a separate terminal of the host OS:
+11. Run opensdn-tools in a separate terminal of the host OS:
 
-        sudo docker run --privileged --pid host --net host --name contrail-tools -ti opensdn/contrail-tools:latest
+        sudo docker run --privileged --pid host --net host --name opensdn-tools -ti opensdn/opensdn-tools:latest
 
 12. Copy the tutorial repository folder from the **host OS** into the
-root (/) folder of **contrail-tools** container
+root (/) folder of **opensdn-tools** container
 
-        tar cfz tut-rep.tgz tut-rep && sudo docker cp ./tut-rep.tgz contrail-tools:/tut-rep.tgz && sudo docker exec -ti contrail-tools tar xfz tut-rep.tgz
+        tar cfz tut-rep.tgz tut-rep && sudo docker cp ./tut-rep.tgz opensdn-tools:/tut-rep.tgz && sudo docker exec -ti opensdn-tools tar xfz tut-rep.tgz
 
 14. Run containers **cont1** and **cont2** (in separate terminal windows or
 tabs) in the host OS:
@@ -218,7 +218,7 @@ respectively.
 
 Now we must tell OpenSDN vRouter Forwarder to catch packets from interfaces
 **veth1** and **veth2** and transfer them. This is achieved using **vif**
-utility from OpenSDN contrail-tools package. The utility can be used to
+utility from OpenSDN opensdn-tools package. The utility can be used to
 list interfaces connected to OpenSDN vRouter Forwarder or it can be also
 used to connect host OS virtual or physical network interfaces. There
 is a special script 
@@ -227,19 +227,19 @@ prepared for this tutorial to run this utility:
 
     veth_name=$1 #veth1
     veth_mac=00:00:5e:00:01:00
-    cont_name=contrail-tools
+    cont_name=opensdn-tools
     
     
     docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
 
-It is assumed that the container with contrail-tools package is up and running
-under the name **contrail-tools**. If so, then one types in the host OS:
+It is assumed that the container with opensdn-tools package is up and running
+under the name **opensdn-tools**. If so, then one types in the host OS:
 
     sudo bash tut-rep/scripts/make-vif veth1
     sudo bash tut-rep/scripts/make-vif veth2
 
 The result of this operation can be verified using **vif** utility inside
-**contrail-tools** container:
+**opensdn-tools** container:
 
     vif --list
 
@@ -255,8 +255,8 @@ among which we should see records for **veth1** and **veth2**, Fig. C4.
 ![Fig. C3: An example of "ip a" output in cont2](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-3.png)
 *Fig. C3: An example of "ip a" output in **cont2***
 
-![Fig. C4: An example of "vif --list" output in contrail-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-4.png)
-*Fig. C4: An example of "vif --list" output in **contrail-tools***
+![Fig. C4: An example of "vif --list" output in opensdn-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-4.png)
+*Fig. C4: An example of "vif --list" output in **opensdn-tools***
 
 D. Configuration of routing information
 ---------------------------------------
@@ -279,7 +279,7 @@ by passing empty list of files where memory is mapped. The corresponding
 request is stored in [set_hugepages_conf.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_hugepages_conf.xml)
 file.
 
-We invoke the request from **contrail-tools** container using **vrcli**
+We invoke the request from **opensdn-tools** container using **vrcli**
 command as follows (in the directory where the tutorial repository was
 cloned into):
 
@@ -291,7 +291,7 @@ As a response we must see:
 
 Usually this means that the request producing such message was accepted and 
 processed. We can check that the operation was succesfull by invoking the
-next command inside **contrail-tools** container:
+next command inside **opensdn-tools** container:
 
     rt --dump 0 --family bridge
 
@@ -299,8 +299,8 @@ If one doesn't see error messages and sees instead empty routing tables,
 then it means that vRouter Forwarder memory has been initialized
 successfully, see Fig. D-1.
 
-![Fig. D1: An example of "rt" output in contrail-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-1.png)
-*Fig. D1: An example of "rt" output in contrail-tools*
+![Fig. D1: An example of "rt" output in opensdn-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-1.png)
+*Fig. D1: An example of "rt" output in opensdn-tools*
 
 Next we must adjust the VRF table which is meant for keeping routing
 information for packets travelling between **cont1** and **cont2**. In
@@ -352,7 +352,7 @@ numbers are arbitrary (i.e. they don't need to follow any rules). Let's
 choose nexthop number 1 for virtual interface 1 (**veth1**) and nexthop 2 for
 virtual interface 2 (**veth2**).
 
-Then we invoke our requests in **contrail-tools** container:
+Then we invoke our requests in **opensdn-tools** container:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif1_ip.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_vif2_ip.xml
@@ -366,8 +366,8 @@ vRouter Forwarder (see Fig D-2 for example):
 
     vif --list
 
-![Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-2.png)
-*Fig. D2: An example of "vif" output in contrail-tools after the addition of interfaces*
+![Fig. D2: An example of "vif" output in opensdn-tools after the addition of interfaces](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-2.png)
+*Fig. D2: An example of "vif" output in opensdn-tools after the addition of interfaces*
 
 Nexthops 1 and 2 are referenced by our interfaces, but they do not present in
 our configuration and this can be checked with the utility **nh**:
@@ -392,7 +392,7 @@ For the interface label (ID) we replace value "0":
 
     <element>0</element>
 with the actual ID of **veth1** or **veth2** interface from the output of
-**vif** command (**contrail-tools** container), see Fig. D2 for example:
+**vif** command (**opensdn-tools** container), see Fig. D2 for example:
 
     vif --list
 
@@ -421,17 +421,17 @@ The output of these commands must be similar to Fig. D-3. Note, that here we
 use **veth1c** and **veth2c** instead of **veth1** and **veth2** because
 we need MAC addresses of the interfaces from containers, not from the host OS.
 Also, whereas we take values from **cont1** and **cont2** containers, we
-modify XML files with requests inside **contrail-tools** container.
+modify XML files with requests inside **opensdn-tools** container.
 
 The obtained values can be copied into requests stored in
 **set_cont1_br_nh_req.xml** and **set_cont2_br_nh_req.xml** files in 
-**contrail-tools** container. Then we run these requests in order to add
-nexthops into vRouter Forwarder (**contrail-tools** container):
+**opensdn-tools** container. Then we run these requests in order to add
+nexthops into vRouter Forwarder (**opensdn-tools** container):
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_nh.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_nh.xml
 
-Now we can check that nexthops were added by typing in **contrail-tools**
+Now we can check that nexthops were added by typing in **opensdn-tools**
 container:
 
     nh --list
@@ -450,8 +450,8 @@ can be found inside
 ![Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-3.png)
 *Fig. D3: The output of "devmac2list" showing MAC address of interfaces veth1c and veth2c as lists for an XML request*
 
-![Fig. D4: An example of "nh" output in contrail-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-4.png)
-*Fig. D4: An example of "nh" output in contrail-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c*
+![Fig. D4: An example of "nh" output in opensdn-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-4.png)
+*Fig. D4: An example of "nh" output in opensdn-tools with list of L2 nexthops pointing to interfaces veth1c and veth2c*
 
 While our interfaces are now associated with nexthops, vRouter Forwarder
 still doesn't have enough information to transfer packets between **veth1c**
@@ -476,19 +476,19 @@ file. As it is seen from the content of the file, the request is quite simple:
 it just associates a nexthop number with an MPLS label number.
 
 In order to create MPLS labels for our nexthops 1 and 2 it's necessary
-to run the request **set_mpls.xml** file from **contrail-tools**
+to run the request **set_mpls.xml** file from **opensdn-tools**
 container:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls1.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mpls2.xml
 
 The results of the command can be verified with **mpls** utility in
-**contrail-tools** container (see Fig. D-5 for example):
+**opensdn-tools** container (see Fig. D-5 for example):
 
     mpls --dump
 
-![Fig. D5: An example of "mpls" output in contrail-tools with the list of new MPLS labels](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-5.png)
-*Fig. D5: An example of "mpls" output in contrail-tools with the list of new MPLS labels*
+![Fig. D5: An example of "mpls" output in opensdn-tools with the list of new MPLS labels](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-5.png)
+*Fig. D5: An example of "mpls" output in opensdn-tools with the list of new MPLS labels*
 
 L2 route records are added via **vr_route_req** requests. The request
 must contain: 
@@ -514,14 +514,14 @@ using script **devmac2list** by running next commands from the host OS:
     sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth2c
 
 The output of each command must be substituted into **rtr_mac** field of
-**set_cont1_br_rt.xml** and **set_cont2_br_rt.xml** inside **contrail-tools**
+**set_cont1_br_rt.xml** and **set_cont2_br_rt.xml** inside **opensdn-tools**
 container (instead of lines `<element>1</element> ... <element>6</element>`).
-Next we run **vrcli** command inside **contrail-tools**:
+Next we run **vrcli** command inside **opensdn-tools**:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_br_rt.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_br_rt.xml
 
-The added routes can be verified using **rt** command inside **contrail-tools**
+The added routes can be verified using **rt** command inside **opensdn-tools**
 container (here 0 corresponds to the label of the VRF table):
 
     rt --dump 0 --family bridge
@@ -542,8 +542,8 @@ of packets between virtual machines or containers (see Fig. D7):
 defining which nexthops must be applied to packets depending on their
 outer headers.
 
-![Fig. D6: An example of "rt" output in contrail-tools with the list of new L2 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-6.png)
-*Fig. D6: An example of "rt" output in contrail-tools with the list of new L2 routes*
+![Fig. D6: An example of "rt" output in opensdn-tools with the list of new L2 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-6.png)
+*Fig. D6: An example of "rt" output in opensdn-tools with the list of new L2 routes*
 
 
 ![Fig. D7: Relations between main OpenSDN vRouter Forwarder tables: the VRFs table, routes tables, the nexthop table, the interfaces table](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-7.jpg)
@@ -562,20 +562,20 @@ Labels 11 and 22 were selected for L3 nexthops associated with interfaces
 modification of the interface MAC address in **nhr_encap** field (the procedure
 is similar to the used previously for L2 nexthops) and the interface label
 **nhr_encap_oif_id** must be set accordingly (same as for L2 nexthops). Finally,
-the nexthops are added in **contrail-tools** container using the commands:
+the nexthops are added in **opensdn-tools** container using the commands:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_inet_nh.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_inet_nh.xml
 
 Upon the successful completion, the list of nexthops must get updated and this
-can be verified using **nh** command inside **contrail-tools** container:
+can be verified using **nh** command inside **opensdn-tools** container:
 
     nh --list
 
 The reference output of the command is presented in Fig. D-8.
 
-![Fig. D8: An example of "nh" output in contrail-tools with the list of new nexthops](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-8.png)
-*Fig. D8: An example of "nh" output in contrail-tools with the list of new nexthops*
+![Fig. D8: An example of "nh" output in opensdn-tools with the list of new nexthops](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-8.png)
+*Fig. D8: An example of "nh" output in opensdn-tools with the list of new nexthops*
 
 Finally, L3 routes are added using the requests similar to what have been
 used for L2 routes. The examples of requests are stored in
@@ -592,21 +592,21 @@ outer header equal to 10.1.1.11/32 or 10.1.1.22/32 enters vRouter Forwarder
 through interfaces associated with VRF table 0, it will be redirected
 to the corresponding nexthops (11 and 22 respectively).
 
-The routes are added in **contrail-tools** container using the commands:
+The routes are added in **opensdn-tools** container using the commands:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont1_inet_rt.xml
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_cont2_inet_rt.xml
 
 The resulting configuration can be verified using **rt** command in
-**contrail-tools** container:
+**opensdn-tools** container:
 
     rt --get 10.1.1.11/32 --vrf 0 --family inet
     rt --get 10.1.1.22/32 --vrf 0 --family inet
 
 The output of the commands should be similar to the presented on Fig. D-9.
 
-![Fig. D9: An example of "rt" output in contrail-tools with the list of new L3 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-9.png)
-*Fig. D9: An example of "rt" output in contrail-tools with the list of new L3 routes*
+![Fig. D9: An example of "rt" output in opensdn-tools with the list of new L3 routes](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-9.png)
+*Fig. D9: An example of "rt" output in opensdn-tools with the list of new L3 routes*
 
 E. Verification of connectivity between containers
 --------------------------------------------------
@@ -630,7 +630,7 @@ about resolution of MAC address for IP 10.1.1.11. Hence, it can be concluded
 that possibly the current vRouter Forwarder configuration doesn't transmit
 ARP packets from **cont1** to **cont2** or in the reverse direction. The
 reasons of this behavour can be clarified using **dropstats** utility
-from **contrail-tools** container:
+from **opensdn-tools** container:
 
     dropstats --log 0
 
@@ -646,8 +646,8 @@ can't find an L2 router for broadcast MAC address FF:FF:FF:FF:FF:FF.
 *Fig. E1: An example of "tcpdump" with ARP requests*
 
 
-![Fig. E2: An example of "dropstats" output in contrail-tools showind last forwarding error messages](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-2.png)
-*Fig. E2: An example of "dropstats" output in contrail-tools showind last forwarding error messages*
+![Fig. E2: An example of "dropstats" output in opensdn-tools showind last forwarding error messages](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-2.png)
+*Fig. E2: An example of "dropstats" output in opensdn-tools showind last forwarding error messages*
 
 
 Thus, we need a route with a corresponding nexthop that redirects ARP packets
@@ -667,7 +667,7 @@ virtual interfaces;
 - <nhr_label_list></nhr_label_list>, a list of MPLS labels corresponding to
 the nexthops from <nhr_nh_list></nhr_nh_list>.
 
-Having applied the commands to run these requests from **contrail-tools**
+Having applied the commands to run these requests from **opensdn-tools**
 container:
 
     vrcli --vr_kmode --send_sandesh_req tut-rep/xml_reqs/set_mcast_br_nh.xml
@@ -676,8 +676,8 @@ container:
 we can now verify the modified list of nexthops and the
 modified list of L2 routes (see Fig. E-3) have accommodated the new records.
 
-![Fig. E3: An example of "nh" and "rt" output in contrail-tools showing new nexthops and bridge routes tables](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-3.png)
-*Fig. E3: An example of "nh" and "rt" output in contrail-tools showing new nexthops and bridge routes tables*
+![Fig. E3: An example of "nh" and "rt" output in opensdn-tools showing new nexthops and bridge routes tables](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-E-3.png)
+*Fig. E3: An example of "nh" and "rt" output in opensdn-tools showing new nexthops and bridge routes tables*
 
 Now **ping** command from 10.1.1.11 to 10.1.1.22 and in the reverse direction
 must work properly (see Fig E-4).
@@ -767,7 +767,7 @@ tunnel) types.
 
 ### OpenSDN dataplane utilities
 
-Next OpenSDN tools (from **contrail-tools** image) can be used for manipulation and
+Next OpenSDN tools (from **opensdn-tools** image) can be used for manipulation and
 inspection of the dataplane state:
 
 - **vrcli** sends requests (specified in XML files) into vRouter Forwarder to
