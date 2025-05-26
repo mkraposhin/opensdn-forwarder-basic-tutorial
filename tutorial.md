@@ -37,7 +37,7 @@ each having an IP address (10.1.1.11/24 and 10.1.1.22/24) and communicating
 with each other via a switch which is imitated using OpenSDN vRouter Forwarder.
 
 From the operating system point of view we will have 2 containers connected
-to the host OS and to the vRouter Forwarder via veth pairs (
+to the **host OS** and to the vRouter Forwarder via veth pairs (
 **veth1**/**veth1c** and **veth2**/**veth2c**), Fig. I2.
 
 ![Fig. I1: The considered virtual network configuration design](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-I-1.jpg)
@@ -75,7 +75,7 @@ necessary network utils inside it, see Fig. A2:
         apt install iproute2 iputils-ping netcat git nano vim-tiny -y
 
 After all these actions we must have 2 Ubuntu 22 containers running with
-names **cont1** and **cont2** inside the host operating system.
+names **cont1** and **cont2** inside the **host operating system**.
 
 Finally, its necessary to download the tutorial folders from GitHub repository
 into the filesystems of the **host OS / Ubuntu OS**, containers **cont1** and **cont2**:
@@ -83,7 +83,7 @@ into the filesystems of the **host OS / Ubuntu OS**, containers **cont1** and **
     git clone https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial.git tut-rep
 
 It is assumed that the repository is downloaded inside the user home directory of
-the host OS and inside the root directory (/) of containers **cont1**
+the **host OS** and inside the root directory (/) of containers **cont1**
 and **cont2**.
 
 ![Fig. A1: Starting the first container (cont1)](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-A-1.png)
@@ -104,40 +104,42 @@ using some installation scripts, which are not used because this tutorial
 is claimed as minimal.
 
 1. Install gcc compiler and other tools in order to compile and install vRouter
-Forwarder in the host OS:
+Forwarder in the **host OS**:
 
         sudo apt install gcc make dkms -y
 
 2. Install the corresponding kernel sources and headers (5.15),
 https://ubuntuhandbook.org/index.php/2023/11/install-ga-kernel-5-15-ubuntu-22-04/
-and reboot your host OS.
-3. Pull the image needed to build in the host OS OpenSDN vRouter Forwarder
+and reboot your **host OS**.
+3. Pull the image needed to build in the **host OS** OpenSDN vRouter Forwarder
 from dockerhub:
 
         sudo docker pull opensdn/tf-vrouter-kernel-build-init
 
-4. Remove other kernels from the host OS, for example using *apt autoremove*.
-5. If the host OS is running inside the VirtualBox, install vbox additions.
-6. Reboot the host OS to boot into the installed 5.15 kernel.
+4. Remove other kernels from the **host OS**, for example using *apt autoremove*.
+5. If the **host OS** is running inside the VirtualBox, install vbox additions.
+6. Reboot the **host OS** to boot into the installed 5.15 kernel.
 7. Compile the OpenSDN vRouter Forwarder module by running the image downloaded
-at step 3 in the host OS:
+at step 3 in the **host OS**:
 
         sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules opensdn/tf-vrouter-kernel-build-init:latest
 
-8. The build and installation process should output information about the progress on the screen. The file vrouter.ko must appear inside /lib/modules/$(uname -r)/updates/dkms of the host OS filesystem (see Fig. B1). Install the compiled vRouter Forwarder module into memory using modprobe
-in the host OS:
+8. The build and installation process should output information about the progress on the screen.
+The file vrouter.ko must appear inside /lib/modules/$(uname -r)/updates/dkms of the **host OS** 
+filesystem (see Fig. B1). Install the compiled vRouter Forwarder module into memory using modprobe
+in the **host** OS:
 
         sudo modprobe vrouter
 
-9. Check that **vrouter** module has been installed in the host OS:
+9. Check that **vrouter** module has been installed in the **host OS**:
 
         lsmod | grep vrouter
 
-10. Download opensdn-tools image in the host OS:
+10. Download opensdn-tools image in the **host OS**:
 
         sudo docker pull opensdn/opensdn-tools
 
-11. Run opensdn-tools in a separate terminal of the host OS:
+11. Run opensdn-tools in a separate terminal of the **host OS**:
 
         sudo docker run --privileged --pid host --net host --name opensdn-tools -ti opensdn/opensdn-tools:latest
 
@@ -147,7 +149,7 @@ root (/) folder of **opensdn-tools** container
         tar cfz tut-rep.tgz tut-rep && sudo docker cp ./tut-rep.tgz opensdn-tools:/tut-rep.tgz && sudo docker exec -ti opensdn-tools tar xfz tut-rep.tgz
 
 14. Run containers **cont1** and **cont2** (in separate terminal windows or
-tabs) in the host OS:
+tabs) in the **host OS**:
 
         sudo docker start cont1
         sudo docker start cont2
@@ -180,7 +182,7 @@ will be used to create these virtual interface pairs.
 Since each container works in it's network namespace, we can create a linux
 virtual interface pair (**veth**) and move one interface from this pair
 into the container's network namespace. Thus we'll have network connectivity
-between the container's and the host OS's environments.
+between the container's and the **host OS**'s environments.
 
 All configuration operations are stored inside 
 [scripts](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/tree/main/scripts)
@@ -201,7 +203,7 @@ container and assigns it the specified address:
     docker exec -ti $cont_name ip link set dev $vethc_name up
     docker exec -ti $cont_name ip addr add $vethc_ip dev $vethc_name
 
-Firstly, we create a virtual pair for container **cont1** on the host OS:
+Firstly, we create a virtual pair for container **cont1** on the **host OS**:
 
     sudo bash tut-rep/scripts/make-veth veth1 veth1c cont1 10.1.1.11/24
 
@@ -209,10 +211,10 @@ Then we create a virtual pair for container **cont2**:
 
     sudo bash tut-rep/scripts/make-veth veth2 veth2c cont2 10.1.1.22/24
 
-After these steps we must see 2 new interfaces in the host OS (Fig. C1)
+After these steps we must see 2 new interfaces in the **host OS** (Fig. C1)
 and one new interface in **cont1** and **cont** (Fig. C2 and Fig. C3
 respectively).
-Interfaces **veth1** and **veth2** reside in the host OS, while interfaces
+Interfaces **veth1** and **veth2** reside in the **host OS**, while interfaces
 **veth1c** and **veth2c** reside in the containers **cont1** and **cont2**
 respectively.
 
@@ -220,7 +222,7 @@ Now we must tell OpenSDN vRouter Forwarder to catch packets from interfaces
 **veth1** and **veth2** and transfer them. This is achieved using **vif**
 utility from OpenSDN opensdn-tools package. The utility can be used to
 list interfaces connected to OpenSDN vRouter Forwarder or it can be also
-used to connect host OS virtual or physical network interfaces. There
+used to connect **host OS** virtual or physical network interfaces. There
 is a special script 
 [make-vif](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/scripts/make-vif)
 prepared for this tutorial to run this utility:
@@ -233,7 +235,7 @@ prepared for this tutorial to run this utility:
     docker exec -ti $cont_name vif --add $veth_name --mac $veth_mac --vrf 0 --type virtual --transport virtual
 
 It is assumed that the container with opensdn-tools package is up and running
-under the name **opensdn-tools**. If so, then one types in the host OS:
+under the name **opensdn-tools**. If so, then one types in the **host OS**:
 
     sudo bash tut-rep/scripts/make-vif veth1
     sudo bash tut-rep/scripts/make-vif veth2
@@ -246,8 +248,8 @@ The result of this operation can be verified using **vif** utility inside
 The utility returns the list of the atthached to vRouter Forwarder interfaces
 among which we should see records for **veth1** and **veth2**, Fig. C4.
 
-![Fig. C1: An example of "ip a" output in the host OS](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-1.png)
-*Fig. C1: An example of "ip a" output in the host OS*
+![Fig. C1: An example of "ip a" output in the **host OS**](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-1.png)
+*Fig. C1: An example of "ip a" output in the **host OS** *
 
 ![Fig. C2: An example of "ip a" output in cont1](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-2.png)
 *Fig. C2: An example of "ip a" output in **cont1***
@@ -329,7 +331,7 @@ virtual interfaces in vRouter Forwarder. This is achieved by calling a request
 
 However, these requests must be modified before their invocation. Namely:
 - field <vifr_idx></vifr_idx> must contain the actual index of an interface
-from the host OS;
+from the **host OS**;
 - field <vifr_ip></vifr_ip> must contain the IPv4 address of an interface;
 - field <vifr_nh_id></vifr_nh_id> must contain the identifier of the nexthop
 attached to this interface.
@@ -412,14 +414,14 @@ There is a script
 which simplifies retrieval of these elements from an interface (in order to
 use it, the repository must be cloned into **cont1** and **cont2**).
 If the repository was cloned into folder **/tut-rep** of **cont1** and
-**cont2** containers, then we can run next commands from the host OS:
+**cont2** containers, then we can run next commands from the **host OS**:
 
     sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth1c
     sudo docker exec -ti cont2 bash /tut-rep/scripts/devmac2list veth2c
 
 The output of these commands must be similar to Fig. D-3. Note, that here we
 use **veth1c** and **veth2c** instead of **veth1** and **veth2** because
-we need MAC addresses of the interfaces from containers, not from the host OS.
+we need MAC addresses of the interfaces from containers, not from the **host OS**.
 Also, whereas we take values from **cont1** and **cont2** containers, we
 modify XML files with requests inside **opensdn-tools** container.
 
@@ -508,7 +510,7 @@ and
 files.
 
 Values of **veth1c** and **veth2c** interfaces MAC address can be retrieved
-using script **devmac2list** by running next commands from the host OS:
+using script **devmac2list** by running next commands from the **host OS**:
 
     sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth1c
     sudo docker exec -ti cont1 bash /tut-rep/scripts/devmac2list veth2c
@@ -617,7 +619,7 @@ there are two interfaces connected to the containers and to vRouter Forwarder,
 and there are L3 and L2 routes linked to these interfaces allowing transmission
 of packets between them. Obviously, the configuration can be verified using
 **ping** and **tcpdump** utilities:
-1. start **tcpdump** in the host OS system watching interface 1 **veth1**:
+1. start **tcpdump** in the **host OS** system watching interface 1 **veth1**:
         sudo tcpdump -i veth1 -vv -n
 2. run **ping**  to the second container (**cont2**) inside the first
 container **cont1**:
@@ -722,7 +724,7 @@ communication between containers.
 
 1. A **virtual interface** (or VIF) is a connected pair of interfaces with
 one of them pointing into a virtual machine or a container and another one
-attached to the host operating system where virtual resources (VMs or 
+attached to the **host operating system** where virtual resources (VMs or 
 other type) are managed. Before being used with vRouter Forwarder a virtual
 interface must be plugged in using the **vif** utility or a Sandesh
 request.
