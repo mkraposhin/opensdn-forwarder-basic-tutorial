@@ -114,7 +114,7 @@ and reboot your **host OS**.
 3. Pull the image needed to build in the **host OS** OpenSDN vRouter Forwarder
 from dockerhub:
 
-        sudo docker pull opensdn/tf-vrouter-kernel-build-init
+        sudo docker pull opensdn/opensdn-vrouter-kernel-build-init
 
 4. Remove other kernels from the **host OS**, for example using *apt autoremove*.
 5. If the **host OS** is running inside the VirtualBox, install vbox additions.
@@ -122,7 +122,7 @@ from dockerhub:
 7. Compile the OpenSDN vRouter Forwarder module by running the image downloaded
 at step 3 in the **host OS**:
 
-        sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules opensdn/tf-vrouter-kernel-build-init:latest
+        sudo docker run --mount type=bind,src=/usr/src,dst=/usr/src --mount type=bind,src=/lib/modules,dst=/lib/modules opensdn/opensdn-vrouter-kernel-build-init:latest
 
 8. The build and installation process should output information about the progress on the screen.
 The file vrouter.ko must appear inside /lib/modules/$(uname -r)/updates/dkms of the **host OS** 
