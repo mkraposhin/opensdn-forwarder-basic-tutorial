@@ -119,6 +119,11 @@ from dockerhub:
 4. Remove other kernels from the **host OS**, for example using *apt autoremove*.
 5. If the **host OS** is running inside the VirtualBox, install vbox additions.
 6. Reboot the **host OS** to boot into the installed 5.15 kernel.
+If sources for the current linux kernel version were not installed, try installing
+them manually:
+
+    sudo apt install linux-headers-`uname -r`
+
 7. Compile the OpenSDN vRouter Forwarder module by running the image downloaded
 at step 3 in the **host OS**:
 
