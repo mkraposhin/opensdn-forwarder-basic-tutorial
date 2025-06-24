@@ -103,8 +103,8 @@ covered in details here since usually this process is completed automatically
 using some installation scripts, which are not used because this tutorial
 is claimed as minimal.
 
-1. Install gcc compiler and other tools in order to compile and install vRouter
-Forwarder in the **host OS**:
+1. Install gcc compiler and other tools in order to compile and load the vRouter
+Forwarder module in the **host OS**:
 
         sudo apt install gcc make dkms -y
 
@@ -297,7 +297,17 @@ As a response we must see:
     Running Sandesh request...
 
 Usually this means that the request producing such message was accepted and 
-processed. We can check that the operation was succesfull by invoking the
+processed. If an error response was obtained from **vrcli**, then this means
+that there are memory allocation problems. In most cases, the error message
+coressponds to lack of contiguous large memory blocks (4Mb on modern systems).
+This problem can be troubleshooted using file /proc/buddyinfo showing number of
+free blocks for a given size. Two approaches can be employed to resolver the
+problem: a) the reboot of the **host OS** with subsequent load of the module
+(modprobe vrouter) and the execution of **vrcli** command with set_hugepages_conf.xml
+request or b) increase of RAM for the **host OS** (8Gb should work almost in
+all cases).
+
+We can check that the last operation was succesfull by invoking the
 next command inside **opensdn-tools** container:
 
     rt --dump 0 --family bridge
