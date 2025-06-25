@@ -15,3 +15,5 @@ The repository contains has next structure:
 In case of questions, suggestions or corrections arising, please write them in 
 [Issues](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/issues)
 section of the repository.
+
+The next tutorial is [OpenSDN vRouter Forwarder flows tutorial](https://github.com/mkraposhin/opensdn-forwarder-flows-tutorial)
