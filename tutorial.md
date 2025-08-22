@@ -407,7 +407,8 @@ the interface with we associate the nexthop.
 
 For the interface label (ID) we replace value "0":
 
-    <element>0</element>
+    <nhr_encap_oif_id>0</nhr_encap_oif_id>
+
 with the actual ID of **veth1** or **veth2** interface from the output of
 **vif** command (**opensdn-tools** container), see Fig. D2 for example:
 
