@@ -298,14 +298,15 @@ As a response we must see:
 
 Usually this means that the request producing such message was accepted and 
 processed. If an error response was obtained from **vrcli**, then this means
-that there are memory allocation problems. In most cases, the error message
+that there had been memory allocation problems. In most cases, the error message
 coressponds to lack of contiguous large memory blocks (4Mb on modern systems).
 This problem can be troubleshooted using file /proc/buddyinfo showing number of
-free blocks for a given size. Two approaches can be employed to resolver the
+free blocks for a given size. Two approaches can be employed to resolve the
 problem: a) the reboot of the **host OS** with subsequent load of the module
 (modprobe vrouter) and the execution of **vrcli** command with set_hugepages_conf.xml
 request or b) increase of RAM for the **host OS** (8Gb should work almost in
-all cases).
+all cases). The recommended parameters for vRouter Forwarder tables, as well
+as commands to free memory can be also found at: [https://github.com/Juniper/contrail-controller/wiki/Vrouter-Module-Parameters](https://github.com/Juniper/contrail-controller/wiki/Vrouter-Module-Parameters).
 
 We can check that the last operation was succesfull by invoking the
 next command inside **opensdn-tools** container:
