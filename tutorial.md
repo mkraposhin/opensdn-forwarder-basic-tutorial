@@ -265,8 +265,8 @@ among which we should see records for **veth1** and **veth2**, Fig. C4.
 ![Fig. C4: An example of "vif --list" output in opensdn-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-4.png)
 *Fig. C4: An example of "vif --list" output in **opensdn-tools***
 
-D. Configuration of routing information
----------------------------------------
+D. Configuration of forwarding information
+------------------------------------------
 
 OpenSDN vRouter Forwarder uses the Netlink protocol to receive
 requests and send responses. Configuration requests can be written
@@ -313,14 +313,14 @@ next command inside **opensdn-tools** container:
 
     rt --dump 0 --family bridge
 
-If one doesn't see error messages and sees instead empty routing tables,
-then it means that vRouter Forwarder memory has been initialized
-successfully, see Fig. D-1.
+If one doesn't see error messages and sees instead empty routing and
+forwarding tables,then it means that vRouter Forwarder memory has been
+initialized successfully, see Fig. D-1.
 
 ![Fig. D1: An example of "rt" output in opensdn-tools](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-D-1.png)
 *Fig. D1: An example of "rt" output in opensdn-tools*
 
-Next we must adjust the VRF table which is meant for keeping routing
+Next we must adjust the VRF table which is meant for keeping forwarding
 information for packets travelling between **cont1** and **cont2**. In
 OpenSDN dataplane, network traffic is switched between endpoints 
 (VMs, containers, etc) of a hypervisor according to isolated routing
@@ -341,8 +341,8 @@ We can verify that VRF table 0 has been created using **vrftable** utility:
 
     vrftable --dump
 
-Before setting up routing information it's necessary to update configuration of
-virtual interfaces in vRouter Forwarder. This is achieved by calling a request
+Before setting up forwarding information it's necessary to update configuration
+of virtual interfaces in vRouter Forwarder. This is achieved by calling a request
 **vr_interface_req** stored in files [set_vif1_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif1_ip.xml) and [set_vif2_ip.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_vif2_ip.xml) for containers **cont1** and **cont2** respectively.
 
 However, these requests must be modified before their invocation. Namely:
@@ -553,7 +553,7 @@ L3 routes in order to use ping. However, even this very simple configuration
 demonstrates how data in general is organized inside vRouter Forwarder.
 Namely, we have several interconnected tables responsible for transmission
 of packets between virtual machines or containers (see Fig. D7):
-- a VRFs table defining list of VRF tables with isolated routing information;
+- a VRFs table defining list of VRF tables with isolated forwarding information;
 - an interfaces table specifying the association between an interface
 (attached to a VM or a container) with a VRF table and with a nexthop;
 - a nexthops table defining a list of nexthops (destinations);
