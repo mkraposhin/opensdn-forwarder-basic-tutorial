@@ -254,7 +254,7 @@ The utility returns the list of the atthached to vRouter Forwarder interfaces
 among which we should see records for **veth1** and **veth2**, Fig. C4.
 
 ![Fig. C1: An example of "ip a" output in the **host OS**](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-1.png)
-*Fig. C1: An example of "ip a" output in the **host OS** *
+*Fig. C1: An example of "ip a" output in the **host OS***
 
 ![Fig. C2: An example of "ip a" output in cont1](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/figs/Fig-C-2.png)
 *Fig. C2: An example of "ip a" output in **cont1***
