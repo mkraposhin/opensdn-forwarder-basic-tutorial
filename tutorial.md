@@ -184,7 +184,7 @@ and then connected to vRouter Forwarder to enable packet transfer between
 containers **cont1** and **cont2** using OpenSDN. Linux network namespaces
 will be used to create these virtual interface pairs.
 
-Since each container works in it's network namespace, we can create a linux
+Since each container works in its network namespace, we can create a linux
 virtual interface pair (**veth**) and move one interface from this pair
 into the container's network namespace. Thus we'll have network connectivity
 between the container's and the **host OS**'s environments.
@@ -271,7 +271,7 @@ D. Configuration of routing information
 OpenSDN vRouter Forwarder uses the Netlink protocol to receive
 requests and send responses. Configuration requests can be written
 in the form of XML files, then the Sandesh-based utility **vrcli** reads
-an XML, decodes it's content, encodes it into controlling messages and
+an XML, decodes its content, encodes it into controlling messages and
 sends them to vRouter Forwarder. All requests from this tutorial
 are located in [xml_reqs](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_hugepages_conf.xml)
 folder. **vrcli** can work both with vRouter running in DPDK or linux
@@ -324,7 +324,7 @@ Next we must adjust the VRF table which is meant for keeping routing
 information for packets travelling between **cont1** and **cont2**. In
 OpenSDN dataplane, network traffic is switched between endpoints 
 (VMs, containers, etc) of a hypervisor according to isolated routing
-and forwarding tables stored as a VRF table which has it's own identifier.
+and forwarding tables stored as a VRF table which has its own identifier.
 Every vRouter Forwarder can have up to 65536 VRF tables with identifiers
 from 0 to 65535. And every virtual or physical interface connected to 
 vRouter Forwarder (and intended for overlay packets switching) must be
@@ -790,7 +790,7 @@ Next OpenSDN tools (from **opensdn-tools** image) can be used for manipulation a
 inspection of the dataplane state:
 
 - **vrcli** sends requests (specified in XML files) into vRouter Forwarder to
-alter it's state;
+alter its state;
 - **vif** lists virtual and physcial interfaces attached to the vRouter
 Forwarder;
 - **vrftable** prints a list of VRF tables available on the vRouter Forwarder;
