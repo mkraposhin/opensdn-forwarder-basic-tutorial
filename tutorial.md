@@ -400,11 +400,11 @@ and
 [set_cont2_br_nh.xml](https://github.com/mkraposhin/opensdn-forwarder-basic-tutorial/blob/main/xml_reqs/set_cont2_br_nh.xml)
 respectively.
 
-To adjust these templates for the local configuration next fields must be corrected:
-- <nhr_encap_oif_id></nhr_encap_oif_id> storing labels of interfaces **veth1** 
+To adjust these templates for the local configuration, next fields must be corrected:
+- <nhr_encap_oif_id></nhr_encap_oif_id> that stores labels of interfaces **veth1** 
 or **veth2** associated with the given nexthop;
-- <nhr_encap></nhr_encap> storing local (the container or the VM) MAC address of
-the interface with we associate the nexthop.
+- <nhr_encap></nhr_encap> that stores local (the container or the VM) MAC address of
+the interface with which we associate the nexthop.
 
 For the interface label (ID) we replace value "0":
 
